@@ -15,7 +15,6 @@
             "email": "mike@creavos.com"
         }
     ],
-    "minimum-stability": "dev",
     "autoload" : {
         "psr-4" : {
             "NeverBounce\\API\\": "src/api/"
