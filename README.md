@@ -10,14 +10,14 @@ This package takes advantage of composer's autoloading features, following the P
 
 To install using composer you can run
 ```
-composer require "neverbounce/neverbounce-php": "dev-master"
+composer require "neverbounce/neverbounce-php":*
 ```
 
 Or add this to your composer.json
 ```
 {
   "require": {
-    "neverbounce/neverbounce-php": "dev-master"
+    "neverbounce/neverbounce-php":*
   }
 }
 ```
