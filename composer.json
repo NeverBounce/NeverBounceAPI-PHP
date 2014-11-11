@@ -1,5 +1,5 @@
 {
-    "name": "neverbounce/api",
+    "name": "neverbounce/neverbounce-php",
     "description": "This package provides convenient methods to integrate the NeverBounce API into your project.",
     "keywords": ["email", "validation", "verification", "email validation"],
     "homepage": "https://neverbounce.com",
