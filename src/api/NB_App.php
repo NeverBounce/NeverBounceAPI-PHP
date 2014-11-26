@@ -1,7 +1,5 @@
 <?php namespace NeverBounce\API;
 
-use NeverBounce\API\NB_Auth;
-
 /**
  * Class NB_App
  *
