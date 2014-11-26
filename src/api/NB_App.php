@@ -92,7 +92,7 @@ trait NB_App {
 		$this->response_raw = curl_exec( $this->curl );
 		$this->response     = json_decode( $this->response_raw );
 
-		if(!$this->response->success)
+		if(!is_object($this->response) || !$this->response->success)
 			$this->handleError();
 
 		if ( curl_error( $this->curl ) ) {
@@ -103,6 +103,9 @@ trait NB_App {
 	}
 
 	public function handleError() {
+		if(!is_object($this->response))
+			throw new NB_Exception( "Internal API error. " . $this->response_raw );
+
 		switch($this->response->error_code) {
 			case 4:
 				throw new NB_Exception( "Insufficient credits to run this request." );
