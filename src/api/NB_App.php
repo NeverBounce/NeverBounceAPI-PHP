@@ -77,10 +77,33 @@ class NB_App {
 		$this->response_raw = curl_exec( $this->curl );
 		$this->response     = json_decode( $this->response_raw );
 
+		if(!$this->response->success)
+			$this->handleError();
+
 		if ( curl_error( $this->curl ) ) {
 			$this->error = curl_error( $this->curl );
 		} else {
 			return true;
+		}
+	}
+
+	public function handleError() {
+		switch($this->response->error_code) {
+			case 4:
+				throw new NB_Exception( "Insufficient credits to run this request." );
+				break;
+			case 3:
+				throw new NB_Exception( "Invalid Job. " . $this->response->error_msg );
+				break;
+			case 2:
+				throw new NB_Exception( "Malformed request. " . $this->response->error_msg );
+				break;
+			case 1:
+				throw new NB_Exception( "Authorization failure. " . $this->response->error_msg );
+				break;
+			case 0:
+			default:
+				throw new NB_Exception( "Internal API error. " . $this->response->error_msg );
 		}
 	}
 

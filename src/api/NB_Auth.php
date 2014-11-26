@@ -63,14 +63,14 @@ class NB_Auth {
 		 * Make sure the cURL extension exists
 		 */
 		if ( ! function_exists( 'curl_init' ) ) {
-			throw new \Exception( "The NeverBounce API requires the cURL PHP extension to be installed." );
+			throw new NB_Exception( "The NeverBounce API requires the cURL PHP extension to be installed." );
 		}
 
 		/**
 		 * Make sure the JSON extension exists
 		 */
 		if ( ! function_exists( 'json_decode' ) ) {
-			throw new \Exception( "The NeverBounce API requires the JSON PHP extension to be installed." );
+			throw new NB_Exception( "The NeverBounce API requires the JSON PHP extension to be installed." );
 		}
 
 		$this->secretKey = $secretKey;
@@ -79,7 +79,7 @@ class NB_Auth {
 		 * Make sure secretKey has been supplied
 		 */
 		if ( ! $this->secretKey ) {
-			throw new \Exception( "You must supply your secretKey in order to use the NeverBounce API" );
+			throw new NB_Exception( "You must supply your secretKey in order to use the NeverBounce API" );
 		}
 
 		$this->appID = $appID;
@@ -88,17 +88,10 @@ class NB_Auth {
 		 * Make sure appID is supplied
 		 */
 		if ( ! $this->appID ) {
-			throw new \Exception( "You must supply your appID in order to use the NeverBounce API" );
+			throw new NB_Exception( "You must supply your appID in order to use the NeverBounce API" );
 		}
 
 		$this->version = $version;
-
-		/**
-		 * Perform a quick health check
-		 */
-		if ( ! NB_Health::app()->check() ) {
-			throw new \Exception( "Unable to communicate with the NeverBounce API" );
-		}
 	}
 
 	/**
