@@ -7,25 +7,8 @@ use NeverBounce\API\NB_App;
  *
  * @package NeverBounce\API
  */
-class NB_Account extends NB_App {
-
-	/**
-	 * @var \NeverBounce\API\NB_Account
-	 */
-	public static $instance;
-
-	/**
-	 * Instantiates class
-	 *
-	 * @return \NeverBounce\API\NB_Account
-	 */
-	public static function app() {
-		if ( ! ( self::$instance instanceof self ) ) {
-			self::$instance = new self();
-		}
-
-		return self::$instance;
-	}
+class NB_Account {
+	use NB_App;
 
 	/**
 	 * Gets account information

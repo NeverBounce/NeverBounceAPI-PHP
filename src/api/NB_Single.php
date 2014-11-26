@@ -7,12 +7,8 @@ use NeverBounce\API\NB_App;
  *
  * @package NeverBounce\API
  */
-class NB_Single extends NB_App {
-
-	/**
-	 * @var \NeverBounce\API\NB_Single
-	 */
-	public static $instance;
+class NB_Single {
+	use NB_App;
 
 	/**
 	 * Value of a verified good email
@@ -51,19 +47,6 @@ class NB_Single extends NB_App {
 		'catchall'   => self::CATACHALL,
 		'unknown'    => self::UNKNOWN,
 	];
-
-	/**
-	 * Instantiates class
-	 *
-	 * @return \NeverBounce\API\NB_Single
-	 */
-	public static function app() {
-		if ( ! ( self::$instance instanceof self ) ) {
-			self::$instance = new self();
-		}
-
-		return self::$instance;
-	}
 
 	/**
 	 * This performs a single validation

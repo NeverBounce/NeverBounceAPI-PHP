@@ -7,25 +7,8 @@ use NeverBounce\API\NB_App;
  *
  * @package NeverBounce\API
  */
-class NB_Health extends NB_App {
-
-	/**
-	 * @var \NeverBounce\API\NB_Health
-	 */
-	public static $instance;
-
-	/**
-	 * Instantiates class
-	 *
-	 * @return \NeverBounce\API\NB_Health
-	 */
-	public static function app() {
-		if ( ! ( self::$instance instanceof self ) ) {
-			self::$instance = new self();
-		}
-
-		return self::$instance;
-	}
+class NB_Health {
+	use NB_App;
 
 	/**
 	 * Performs a communication check to verify it can communicate with the api

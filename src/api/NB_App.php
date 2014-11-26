@@ -7,7 +7,11 @@ use NeverBounce\API\NB_Auth;
  *
  * @package NeverBounce\API
  */
-class NB_App {
+trait NB_App {
+	/**
+     * @var \NeverBounce\API\NB_App
+     */
+    public static $instance;
 
 	/**
 	 * @var string The base url for api requests
@@ -43,6 +47,19 @@ class NB_App {
 	 * @var bool Dictates if debug info should be printed or not
 	 */
 	protected $debug = false;
+
+	/**
+     * Instantiates class
+     *
+     * @return \NeverBounce\API\NB_App
+     */
+    public static function app() {
+        if ( ! ( self::$instance instanceof self ) ) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
 
 	/**
 	 *

@@ -1,7 +1,5 @@
 <?php namespace NeverBounce\API;
 
-use NeverBounce\API\NB_Health;
-
 /**
  * Class NB_Auth
  *
