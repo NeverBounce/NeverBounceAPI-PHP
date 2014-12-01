@@ -63,8 +63,15 @@ trait NB_App {
 	 *
 	 * @param string $endpoint string Endpoint to use
 	 * @param array $data Post data for endpoint
+	 *
+	 * @throws \NeverBounce\API\NB_Exception
 	 */
 	public function request( $endpoint, array $data = [ ] ) {
+
+		if($endpoint == null) {
+			throw new NB_Exception('No endpoint was supplied');
+		}
+
 		// Add appID and secretKey
 		$data['app_id'] = NB_Auth::auth()->appID();
 		$data['key']    = NB_Auth::auth()->secretKey();
