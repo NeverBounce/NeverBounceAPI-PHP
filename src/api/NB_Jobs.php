@@ -125,13 +125,14 @@ class NB_Jobs {
 	 * Starts new job
 	 * @param int|string $location Location indicator of input data
 	 * @param string $data Input data string or file location
+	 * @param string $name Name of file
 	 * @param string|null $callback Callback url for system to contact on completion
 	 * @param array|null $params Additional parameters to pass with callback
 	 *
 	 * @return $this
 	 * @throws \NeverBounce\API\NB_Exception
 	 */
-	public function create($location, $data, $callback = null, $params = null) {
+	public function create($location, $data, $name = null, $callback = null, $params = null) {
 		if(is_numeric($location) && $location > 1) {
 			throw new NB_Exception('Input location out of range, it should be either 0 for a remote file or 1 for a string');
 		}
@@ -139,11 +140,16 @@ class NB_Jobs {
 			throw new NB_Exception('Input location out of range, it should be either "remote_url" for a remote file or "supplied" for a string');
 		}
 
+		if($name === null) {
+			$name = uniqid("NBApi_");
+		}
+
 		$this->request( 'bulk' , [
 			'input_location' => (is_string($location) ? $this->input[$location] : $location),
 			'input' => $data,
 		    'callback_url' => $callback,
 		    'callback_params' => $params,
+		    'orig_name' => $name,
 		]);
 
 		return $this;

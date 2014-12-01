@@ -7,7 +7,40 @@
  */
 class NB_Job {
 
-	public $finished, $total, $processed, $valid, $invalid, $catchall, $disposable, $unknown;
+	/**
+	 * Job is uploading
+	 */
+	const JOB_UPLOADING = -1;
+
+	/**
+	 * Job is ready
+	 */
+	const JOB_READY = 0;
+
+	/**
+	 * Job is indexing
+	 */
+	const JOB_INDEXING = 1;
+
+	/**
+	 * Job is indexed (awaiting payment)
+	 */
+	const JOB_INDEXED = 2;
+
+	/**
+	 * Job is running
+	 */
+	const JOB_RUNNING = 3;
+
+	/**
+	 * Job is complete
+	 */
+	const JOB_COMPLETE = 4;
+
+	/**
+	 * Job has failed
+	 */
+	const JOB_FAILED = 5;
 
 	/**
 	 * @param $id
@@ -17,6 +50,8 @@ class NB_Job {
 	 */
 	public function __construct($id, $job) {
 		$this->id = (integer) $id;
+		$this->filename = (string) $job->orig_name;
+		$this->status = (integer) $job->state;
 		$this->finished = (bool) $job->finished;
 		$this->total = (integer) $job->total;
 		$this->processed = (integer) $job->processed;
