@@ -66,7 +66,7 @@ trait NB_App {
 	 *
 	 * @throws \NeverBounce\API\NB_Exception
 	 */
-	public function request( $endpoint, array $data = [ ] ) {
+	private function request( $endpoint, array $data = [ ] ) {
 
 		if($endpoint == null) {
 			throw new NB_Exception('No endpoint was supplied');
@@ -95,7 +95,7 @@ trait NB_App {
 	 *
 	 * @return bool
 	 */
-	public function exec_curl() {
+	private function exec_curl() {
 		$this->response_raw = curl_exec( $this->curl );
 		$this->response     = json_decode( $this->response_raw );
 
@@ -109,7 +109,7 @@ trait NB_App {
 		}
 	}
 
-	public function handleError() {
+	private function handleError() {
 		if(!is_object($this->response))
 			throw new NB_Exception( "Internal API error. " . $this->response_raw );
 
@@ -138,14 +138,14 @@ trait NB_App {
 	 * @param $property string CURLOPT to set
 	 * @param $value string Value to set
 	 */
-	public function set_opt( $property, $value ) {
+	private function set_opt( $property, $value ) {
 		curl_setopt( $this->curl, $property, $value );
 	}
 
 	/**
 	 * Closes current cURL connection
 	 */
-	public function close_curl() {
+	private function close_curl() {
 		curl_close( $this->curl );
 	}
 
