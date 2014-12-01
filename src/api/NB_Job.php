@@ -67,9 +67,11 @@ class NB_Job {
 	/**
 	 * @param string $of
 	 *
+	 * @param int $accuracy
+	 *
 	 * @return float
 	 */
-	public function percentage($of = 'total') {
-		return (float) ($this->$of/$this->total*100);
+	public function percentage($of = 'total', $accuracy = 2) {
+		return (float) number_format($this->$of/$this->total*100, $accuracy);
 	}
 }
