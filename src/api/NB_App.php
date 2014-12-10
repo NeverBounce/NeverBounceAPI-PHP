@@ -76,7 +76,7 @@ trait NB_App {
 		$data['app_id'] = NB_Auth::auth()->appID();
 		$data['key']    = NB_Auth::auth()->secretKey();
 
-		$url = (NB_Auth::auth()->api() !== null) ? NB_Auth::auth()->api() : $this->apiBase;
+		$url = (NB_Auth::api() !== null) ? NB_Auth::api() : $this->apiBase;
 
 		// Start request
 		$this->curl = curl_init( $url . NB_Auth::auth()->version() . "/" . $endpoint . "/" );

@@ -31,7 +31,7 @@ class NB_Auth {
 	 * @var string Url to api to use
 	 * This is strictly for dev use, if not set then the default api would be used
 	 */
-	protected $api = null;
+	protected static $api = null;
 
 	/**
 	 * Instantiates an auth object
@@ -130,16 +130,16 @@ class NB_Auth {
 	 *
 	 * @param $url
 	 */
-	public function setAPI($url) {
-		$this->api = $url;
+	public static function setAPI($url) {
+		self::$api = $url;
 	}
 
 	/**
 	 * Returns API url
 	 * @return string
 	 */
-	public function api() {
-		return $this->api;
+	public static function api() {
+		return self::$api;
 	}
 
 }
