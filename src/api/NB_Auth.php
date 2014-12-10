@@ -28,6 +28,12 @@ class NB_Auth {
 	protected $version;
 
 	/**
+	 * @var string Url to api to use
+	 * This is strictly for dev use, if not set then the default api would be used
+	 */
+	protected $api = null;
+
+	/**
 	 * Instantiates an auth object
 	 *
 	 * @param null $secretKey
@@ -118,4 +124,22 @@ class NB_Auth {
 	public function version() {
 		return $this->version;
 	}
+
+	/**
+	 * Sets API url
+	 *
+	 * @param $url
+	 */
+	public function setAPI($url) {
+		$this->api = $url;
+	}
+
+	/**
+	 * Returns API url
+	 * @return string
+	 */
+	public function api() {
+		return $this->api;
+	}
+
 }

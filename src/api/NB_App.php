@@ -76,8 +76,10 @@ trait NB_App {
 		$data['app_id'] = NB_Auth::auth()->appID();
 		$data['key']    = NB_Auth::auth()->secretKey();
 
+		$url = (NB_Auth::auth()->api() !== null) ? NB_Auth::auth()->api() : $this->apiBase;
+
 		// Start request
-		$this->curl = curl_init( $this->apiBase . NB_Auth::auth()->version() . "/" . $endpoint . "/" );
+		$this->curl = curl_init( $url . NB_Auth::auth()->version() . "/" . $endpoint . "/" );
 		if ( $this->debug ) {
 			$this->set_opt( CURLOPT_VERBOSE, true );
 		} // Debug mode
@@ -101,15 +103,18 @@ trait NB_App {
 
 		if(!is_object($this->response) || !$this->response->success)
 			$this->handleError();
-
-		if ( curl_error( $this->curl ) ) {
-			$this->error = curl_error( $this->curl );
-		} else {
-			return true;
-		}
 	}
 
+	/**
+	 * Throw an error if curl request contains an error
+	 *
+	 * @throws \NeverBounce\API\NB_Exception
+	 */
 	private function handleError() {
+		if ( curl_error( $this->curl ) ) {
+			throw new NB_Exception( curl_error( $this->curl ) );
+		}
+
 		if(!is_object($this->response))
 			throw new NB_Exception( "Internal API error. " . $this->response_raw );
 
