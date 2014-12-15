@@ -15,17 +15,17 @@ class NB_Auth {
 	/**
 	 * @var string Your NeverBounce secret key
 	 */
-	protected $secretKey;
+	protected $secretKey = null;
 
 	/**
 	 * @var string Your NeverBounce app ID
 	 */
-	protected $appID;
+	protected $appID = null;
 
 	/**
 	 * @var string The version of the api to use
 	 */
-	protected $version;
+	protected $version = null;
 
 	/**
 	 * @var string Url to api to use
@@ -52,6 +52,8 @@ class NB_Auth {
 
 	/**
 	 * Initialize a new API object with secret key, appId and Version
+	 * you may also set the apiID and secret key after initialization with
+	 * the setters below
 	 *
 	 * If cURL or JSON are not found we throw an exception
 	 *
@@ -78,24 +80,16 @@ class NB_Auth {
 		}
 
 		$this->secretKey = $secretKey;
-
-		/**
-		 * Make sure secretKey has been supplied
-		 */
-		if ( ! $this->secretKey ) {
-			throw new NB_Exception( "You must supply your secretKey in order to use the NeverBounce API" );
-		}
-
 		$this->appID = $appID;
-
-		/**
-		 * Make sure appID is supplied
-		 */
-		if ( ! $this->appID ) {
-			throw new NB_Exception( "You must supply your appID in order to use the NeverBounce API" );
-		}
-
 		$this->version = $version;
+	}
+
+	/**
+	 * Set Secrete Key
+	 * @param $secretKey
+	 */
+	public function setSecretKey($secretKey) {
+		$this->secretKey = $secretKey;
 	}
 
 	/**
@@ -105,6 +99,22 @@ class NB_Auth {
 	 */
 	public function secretKey() {
 		return $this->secretKey;
+	}
+
+	/**
+	 * Set AppID
+	 * @param $appID
+	 */
+	public function setAppID($appID) {
+		$this->appID = $appID;
+	}
+
+	/**
+	 * Set version
+	 * @param $version
+	 */
+	public function setVersion($version) {
+		$this->version = $version;
 	}
 
 	/**

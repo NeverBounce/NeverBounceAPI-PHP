@@ -46,6 +46,22 @@ trait NB_App {
 	 */
 	protected $debug = false;
 
+	public function __construct() {
+		/**
+		 * Make sure secretKey has been supplied
+		 */
+		if ( NB_Auth::auth()->secretKey() === null ) {
+			throw new NB_Exception( "You must supply your secretKey in order to use the NeverBounce API" );
+		}
+
+		/**
+		 * Make sure appID is supplied
+		 */
+		if ( NB_Auth::auth()->appID() === null ) {
+			throw new NB_Exception( "You must supply your appID in order to use the NeverBounce API" );
+		}
+	}
+
 	/**
      * Instantiates class
      *
