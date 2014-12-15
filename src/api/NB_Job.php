@@ -43,6 +43,20 @@ class NB_Job {
 	const JOB_FAILED = 5;
 
 	/**
+	 * User readable definitions for statuses
+	 * @var array
+	 */
+	protected static $definitions = [
+		self::JOB_UPLOADING => 'Uploading',
+		self::JOB_READY => 'Ready',
+		self::JOB_INDEXING => 'Indexing',
+		self::JOB_INDEXED => 'Purchase',
+		self::JOB_RUNNING => 'Validating',
+		self::JOB_COMPLETE => 'Completed',
+		self::JOB_FAILED => 'Failed',
+	];
+
+	/**
 	 * @param $id
 	 * @param $job
 	 *
@@ -72,6 +86,15 @@ class NB_Job {
 	 * @return float
 	 */
 	public function percentage($of = 'total', $accuracy = 2) {
-		return (float) number_format($this->$of/$this->total*100, $accuracy);
+		$total = $this->total*100;
+		// Don't divide by zero
+		if($total === 0)
+			return 0;
+
+		// If $of doesn't exist or is empty don't bother
+		if(!isset($this->$of) || empty($this->$of))
+			return 0;
+
+		return (float) number_format($this->$of/$total, $accuracy);
 	}
 }
