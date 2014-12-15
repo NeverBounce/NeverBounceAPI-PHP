@@ -42,7 +42,7 @@ class NB_Jobs {
 	 * Get list of jobs
 	 */
 	public function __construct() {
-		$this->getList();
+		//$this->getList();
 	}
 
 	/**
@@ -54,17 +54,8 @@ class NB_Jobs {
 	 * @return $this
 	 */
 	public function get($offset = 0, $perpage = 10) {
+		$this->getList();
 		$this->retrieve(array_splice($this->jobList, $offset, $perpage));
-
-		return $this;
-	}
-
-	/**
-	 * Gets first job
-	 * @return $this
-	 */
-	public function first() {
-		$this->retrieve($this->jobList[0]);
 
 		return $this;
 	}
@@ -91,6 +82,16 @@ class NB_Jobs {
 	}
 
 	/**
+	 * Gets first job
+	 * @return $this
+	 */
+	public function first() {
+		$this->retrieve($this->jobList[0]);
+
+		return $this;
+	}
+
+	/**
 	 * Reverses the list
 	 * @return $this
 	 */
@@ -104,8 +105,24 @@ class NB_Jobs {
 	 * Returns jobs
 	 * @return array
 	 */
-	public function jobs() {
+	public function all() {
 		return $this->jobs;
+	}
+
+	/**
+	 * Selects a single job from the array
+	 * returns false, if item doesn't exist
+	 *
+	 * @param $id Job ID
+	 * @return bool|NB_Job
+	 */
+	public function single($id) {
+		foreach($this->jobs as $key => $value) {
+			if($value->id === $id)
+				return $value;
+		}
+
+		return false;
 	}
 
 	/**
