@@ -86,7 +86,7 @@ class NB_Job {
 	 * @return float
 	 */
 	public function percentage($of = 'total', $accuracy = 2) {
-		$total = $this->total*100;
+		$total = $this->total;
 		// Don't divide by zero
 		if($total === 0)
 			return 0;
@@ -95,6 +95,6 @@ class NB_Job {
 		if(!isset($this->$of) || empty($this->$of))
 			return 0;
 
-		return (float) number_format($this->$of/$total, $accuracy);
+		return (float) number_format( ( $this->$of/$total ) * 100, $accuracy);
 	}
 }
