@@ -6,60 +6,30 @@
  * @package NeverBounce\API
  */
 trait NB_App {
+	use NB_Curl;
+
 	/**
      * @var \NeverBounce\API\NB_App
      */
     public static $instance;
 
-	/**
-	 * @var string The base url for api requests
-	 */
-	protected $apiBase = 'https://api.neverbounce.com/';
-
-	/**
-	 * @var resource cURL object
-	 */
-	public $curl;
-
-	/**
-	 * @var string Raw response from cURL request
-	 */
-	public $response_raw;
-
-	/**
-	 * @var array JSON Decoded response from cURL request
-	 */
-	public $response;
-
-	/**
-	 * @var array cURL request info
-	 */
-	public $info;
-
-	/**
-	 * @var bool|string cURL errors if any
-	 */
-	protected $error = false;
-
-	/**
-	 * @var bool Dictates if debug info should be printed or not
-	 */
-	protected $debug = false;
-
 	public function __construct() {
 		/**
-		 * Make sure secretKey has been supplied
+		 * Make sure the cURL extension exists
 		 */
-		if ( NB_Auth::auth()->secretKey() === null ) {
-			throw new NB_Exception( "You must supply your secretKey in order to use the NeverBounce API" );
+		if ( ! function_exists( 'curl_init' ) ) {
+			throw new NB_Exception( "The NeverBounce API requires the cURL PHP extension to be installed." );
 		}
 
 		/**
-		 * Make sure appID is supplied
+		 * Make sure the JSON extension exists
 		 */
-		if ( NB_Auth::auth()->appID() === null ) {
-			throw new NB_Exception( "You must supply your appID in order to use the NeverBounce API" );
+		if ( ! function_exists( 'json_decode' ) ) {
+			throw new NB_Exception( "The NeverBounce API requires the JSON PHP extension to be installed." );
 		}
+
+		if(!NB_Auth::auth()->token())
+			NB_Auth::auth()->get_token();
 	}
 
 	/**
@@ -76,106 +46,19 @@ trait NB_App {
     }
 
 	/**
+	 * Creates a new curl request with access token
 	 *
-	 * @param string $endpoint string Endpoint to use
-	 * @param array $data Post data for endpoint
-	 *
-	 * @throws \NeverBounce\API\NB_Exception
+	 * @param $endpoint
+	 * @param array $data
+	 * @throws NB_Exception
 	 */
-	private function request( $endpoint, array $data = [ ] ) {
+	protected function request($endpoint, $data = []) {
+		if(!NB_Auth::auth()->token())
+			throw new NB_Exception("No access token is present, perhaps NB_Auth was not started");
 
-		if($endpoint == null) {
-			throw new NB_Exception('No endpoint was supplied');
-		}
+		$data['access_token'] = NB_Auth::auth()->token();
 
-		// Add appID and secretKey
-		$data['app_id'] = NB_Auth::auth()->appID();
-		$data['key']    = NB_Auth::auth()->secretKey();
-
-		$url = (NB_Auth::api() !== null) ? NB_Auth::api() : $this->apiBase;
-
-		// Start request
-		$this->curl = curl_init( $url . NB_Auth::auth()->version() . "/" . $endpoint . "/" );
-		if ( $this->debug ) {
-			$this->set_opt( CURLOPT_VERBOSE, true );
-		} // Debug mode
-		$this->set_opt( CURLOPT_SSL_VERIFYPEER, false );
-		$this->set_opt( CURLOPT_HEADER, false );
-		$this->set_opt( CURLOPT_RETURNTRANSFER, true );
-		$this->set_opt( CURLOPT_POST, true );
-		$this->set_opt( CURLOPT_POSTFIELDS, http_build_query( $data ) );
+		$this->_request($endpoint, $data);
 		$this->exec_curl();
-		$this->close_curl();
-	}
-
-	/**
-	 * Executes a new curl request
-	 *
-	 * @return bool
-	 */
-	private function exec_curl() {
-		$this->response_raw = curl_exec( $this->curl );
-		$this->response     = json_decode( $this->response_raw );
-
-		if(!is_object($this->response) || !$this->response->success)
-			$this->handleError();
-	}
-
-	/**
-	 * Throw an error if curl request contains an error
-	 *
-	 * @throws \NeverBounce\API\NB_Exception
-	 */
-	private function handleError() {
-		if ( curl_error( $this->curl ) ) {
-			throw new NB_Exception( curl_error( $this->curl ) );
-		}
-
-		if(!is_object($this->response))
-			throw new NB_Exception( "Internal API error. " . $this->response_raw );
-
-		switch($this->response->error_code) {
-			case 4:
-				throw new NB_Exception( "Insufficient credits to run this request." );
-				break;
-			case 3:
-				throw new NB_Exception( "Invalid Job. " . $this->response->error_msg );
-				break;
-			case 2:
-				throw new NB_Exception( "Malformed request. " . $this->response->error_msg );
-				break;
-			case 1:
-				throw new NB_Exception( "Authorization failure. " . $this->response->error_msg );
-				break;
-			case 0:
-			default:
-				throw new NB_Exception( "Internal API error. " . $this->response->error_msg );
-		}
-	}
-
-	/**
-	 * Sets cURL options
-	 *
-	 * @param $property string CURLOPT to set
-	 * @param $value string Value to set
-	 */
-	private function set_opt( $property, $value ) {
-		curl_setopt( $this->curl, $property, $value );
-	}
-
-	/**
-	 * Closes current cURL connection
-	 */
-	private function close_curl() {
-		curl_close( $this->curl );
-	}
-
-	/**
-	 * Toggle debug or set debug
-	 *
-	 * @param bool $arg
-	 */
-	public function setDebug( $arg = null ) {
-		$this->debug = ( $arg !== null ) ? $arg : ! $this->debug;
 	}
 }

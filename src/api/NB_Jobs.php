@@ -39,13 +39,6 @@ class NB_Jobs {
 	];
 
 	/**
-	 * Get list of jobs
-	 */
-	public function __construct() {
-		//$this->getList();
-	}
-
-	/**
 	 * Paginates results
 	 *
 	 * @param int $offset Where the cursor should start
@@ -131,7 +124,7 @@ class NB_Jobs {
 	 * @return $this
 	 */
 	private function getList() {
-		$this->request( 'list_jobs' );
+		$this->request( 'list_user_jobs' );
 
 		foreach($this->response->jobs as $job) {
 			array_push($this->jobList, (integer) $job);
