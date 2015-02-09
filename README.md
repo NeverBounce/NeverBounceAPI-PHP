@@ -1,7 +1,8 @@
 NeverBounceAPI-PHP
 ==================
 
-*Major Change*
+**Major Change**
+
 With version 2.0.x oAuth2 has been introduced into the API. We will depreciating the 1.x libraries in favor of this version. As such the authorization procedure has changes slightly in this version.
 
 This package provides convenient methods to integrate the NeverBounce API into your project.
