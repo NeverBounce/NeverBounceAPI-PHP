@@ -1,14 +1,15 @@
 NeverBounceAPI-PHP
 ==================
 
-**Major Change**
-
-With version 2.0.x oAuth2 has been introduced into the API. We will depreciating the 1.x libraries in favor of this version. As such the authorization procedure has changes slightly in this version.
-
 This package provides convenient methods to integrate the NeverBounce API into your project.
 
 Be sure to familiarize yourself with the API by visiting the [documentation](http://docs.neverbounce.com).
 Composer Installation
+
+**Major Change**
+
+With version 2.0.x oAuth2 has been introduced into the API. We will depreciating the 1.x libraries in favor of this version. As such the authorization procedure has changes slightly in this version.
+
 ---
 This package takes advantage of composer's autoloading features, following the PSR-4 guidlines.
 
