@@ -1,4 +1,7 @@
 <?php namespace NeverBounce\API;
+
+// Class is temporarily disabled
+exit;
 /**
  * Class NB_Job
  *
