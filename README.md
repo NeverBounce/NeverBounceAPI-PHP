@@ -1,3 +1,6 @@
+**This version is defunct, please check the 2.0.x-dev branch for the latest version**
+
+
 NeverBounceAPI-PHP
 ==================
 
