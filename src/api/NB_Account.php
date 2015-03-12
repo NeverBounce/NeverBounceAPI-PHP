@@ -36,7 +36,7 @@ class NB_Account
      *
      * @return int
      */
-    public function complete()
+    public function job_completed()
     {
         return (integer)$this->response->jobs_completed;
     }
@@ -46,7 +46,7 @@ class NB_Account
      *
      * @return int
      */
-    public function processing()
+    public function jobs_processing()
     {
         return (integer)$this->response->jobs_processing;
     }
