@@ -5,82 +5,114 @@
  *
  * @package NeverBounce\API
  */
-class NB_Single {
-	use NB_App;
+class NB_Single
+{
+    use NB_App;
 
-	/**
-	 * Value of a verified good email
-	 */
-	const GOOD = 0;
+    /**
+     * Value of a verified good email
+     */
+    const GOOD = 0;
 
-	/**
-	 * Value of a verified bad email
-	 */
-	const BAD = 1;
+    /**
+     * Value of a verified bad email
+     */
+    const BAD = 1;
 
-	/**
-	 * Value of a disposable email
-	 */
-	const DISPOSABLE = 2;
+    /**
+     * Value of a disposable email
+     */
+    const DISPOSABLE = 2;
 
-	/**
-	 * Value of a catchall email
-	 */
-	const CATACHALL = 3;
+    /**
+     * Value of a catchall email
+     */
+    const CATACHALL = 3;
 
-	/**
-	 * Value of an unknown email
-	 */
-	const UNKNOWN = 4;
+    /**
+     * Value of an unknown email
+     */
+    const UNKNOWN = 4;
 
-	/**
-	 * Type string definitions
-	 *
-	 * @var array
-	 */
-	protected $types = [
-		'good'       => self::GOOD,
-		'bad'        => self::BAD,
-		'disposable' => self::DISPOSABLE,
-		'catchall'   => self::CATACHALL,
-		'unknown'    => self::UNKNOWN,
-	];
+    /**
+     * Type string definitions
+     *
+     * @var array
+     */
+    protected $types = [
+        'good' => self::GOOD,
+        'bad' => self::BAD,
+        'valid' => self::GOOD,
+        'good' => self::GOOD, // Alias
+        'invalid' => self::BAD,
+        'bad' => self::BAD, // Alias
+        'disposable' => self::DISPOSABLE,
+        'catchall' => self::CATACHALL,
+        'unknown' => self::UNKNOWN,
+    ];
 
-	/**
-	 * This performs a single validation
-	 *
-	 * @param string $email The email to verify
-	 * @param string|null $fname The optional first name associated with email
-	 * @param string|null $lname The optional last name associated with email
-	 *
-	 * @return $this
-	 */
-	public function verify( $email, $fname = null, $lname = null ) {
-		$this->request( 'single', [ 'email' => $email, 'name_f' => $fname, 'name_l' => $lname ] );
+    /**
+     * Type string definitions
+     *
+     * @var array
+     */
+    protected $definitions = [
+        self::GOOD => 'Valid',
+        self::BAD => 'Invalid',
+        self::DISPOSABLE => 'Disposable',
+        self::CATACHALL => 'Catchall',
+        self::UNKNOWN => 'Unknown',
+    ];
 
-		return $this;
-	}
+    /**
+     * This performs a single validation
+     *
+     * @param string $email The email to verify
+     *
+     * @return $this
+     */
+    public function verify($email)
+    {
+        $this->request('single', ['email' => $email]);
 
-	/**
-	 * Checks if the result is in the desired range.
-	 *
-	 * @param mixed $types acceptable result(s), string or array
-	 *
-	 * @return bool
-	 */
-	public function is( $types ) {
-		if ( is_array( $types ) ) {
-			foreach ( $types as $type ) {
-				if ( $this->types[ $type ] == $this->response->result ) {
-					return true;
-				}
-			}
-		} else {
-			if ( $this->types[ $types ] == $this->response->result ) {
-				return true;
-			}
-		}
+        return $this;
+    }
 
-		return false;
-	}
+    public function is($types)
+    {
+        if (is_array($types)) {
+            foreach ($types as $type) {
+                if (!is_numeric($type) && $this->types[$type] == $this->response->result) {
+                    return true;
+                }
+
+                if (is_numeric($type) && $types == $this->response->result) {
+                    return true;
+                }
+            }
+        } else {
+
+            if (!is_numeric($types) && $this->types[$types] == $this->response->result) {
+                return true;
+            }
+
+            if (is_numeric($types) && $types == $this->response->result) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Gets teh definition for the state
+     * @return string
+     */
+    public function definition()
+    {
+        if (isset($this->definitions[$this->response->result]))
+            return $this->definitions[$this->response->result];
+
+        return 'N/A';
+    }
 }
