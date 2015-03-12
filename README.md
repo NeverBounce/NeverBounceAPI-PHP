@@ -36,6 +36,7 @@ You can clone the repo directly and include the files yourself via an auto loade
 
 Usage
 =====
+
 Authentication
 --------------
 With our PHP wrapper authentication can be done by calling the `NB_Auth` class and running the `auth` method. Don't worry about passing a router or version if you do not have these details. Make sure to do this before making any requests with the wrapper or you will receive an authentication error. Placing this in the startup or config of your application is recommended.
@@ -143,6 +144,23 @@ This returns how many running jobs that you have processing through the bulk end
 $account = \NeverBounce\API\NB_Account::check();
 var_dump($account->jobs_processing());
 ```
+
+Exceptions
+----------
+This API wrapper will throw a `NB_Exception` whenever it encounters an error. It is recommended to place all requests within try/catch blocks to gracefully catch these exceptions.
+
+An exception will be thrown in the following instances
+* The cURL extension is not found
+* The JSON extension is not found
+* You do not supply a **secret key** to `NB_Auth::auth()`
+* You do not supply an **app id** to `NB_Auth::auth()`
+* You supply the wrong credentials to `NB_Auth::auth()`, a standard OAuth 2.0 error will be returned
+* You did not generate an **access_token** before making a request
+* You do not have sufficient credits to complete the request
+* You have supplied an invalid job ID (left from v1)
+* The request is malformed (verify that you are running on the correct API version)
+* Your access token has expired or is invalid (Authorization failure)
+* Or in the event of an internal API error
 
 Changes
 =======
