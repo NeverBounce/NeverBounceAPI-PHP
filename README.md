@@ -1,3 +1,6 @@
+<p class="info"><span class="fa fa-info-circle"></span>&nbsp;&nbsp;This version of the API is still under development; in order to use the API please contact <strong><a href="mailto:support@neverbounce.com" style="color:white;">support@neverbounce.com</a></strong> so we can set up an environment that will fit your needs.</p>
+
+
 **This version is defunct, please check the 2.0.x-dev branch for the latest version**
 
 ---
