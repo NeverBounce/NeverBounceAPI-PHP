@@ -45,7 +45,7 @@ With our PHP wrapper authentication can be done by calling the `NB_Auth` class a
 // APP_ID Your API app id
 // ROUTER Your API sub domain http://<route>.neverbounce.com
 // VERSION The api version to use
-\NeverBounce\API\NB_Auth\NB_Auth::auth(<API_KEY>, <APP_ID>, [<ROUTER>, [<VERSION>]]);
+\NeverBounce\API\NB_Auth::auth(<API_KEY>, <APP_ID>, [<ROUTER>, [<VERSION>]]);
 ```
 
 Single
@@ -54,7 +54,7 @@ Once you've authenticated you can use the endpoints freely. To validate an email
 
 ``` PHP
 // Verify an email
-$email = \NeverBounce\API\NB_Auth\NB_Single::verify(<EMAIL>);
+$email = \NeverBounce\API\NB_Single::verify(<EMAIL>);
 var_dump($email->response);
 ```
 ``` PHP
@@ -70,7 +70,7 @@ object(stdClass)#5 (4) {
 This method will check to see if the the validation result matches the desired result code and will return either true or false. It accepts result codes in either string, integer or array formats. 
 
 ``` PHP
-$email = \NeverBounce\API\NB_Auth\NB_Single::verify(<EMAIL>);
+$email = \NeverBounce\API\NB_Single::verify(<EMAIL>);
 
 // Returns true if email is valid
 $email->is('valid');
@@ -96,10 +96,52 @@ $email->is([0,3]);
 This method returns a human readable string for the validation result. The strings returned are 'Valid', 'Invalid', 'Disposable', 'Catchall', and 'Unknown'.
 
 ``` PHP
-$email = \NeverBounce\API\NB_Auth\NB_Single::verify(<EMAIL>);
+$email = \NeverBounce\API\NB_Single::verify(<EMAIL>);
 
 // Returns 'Valid' if email is valid
 $email->definition();
+```
+
+Account
+-------
+The account class can be accessed by calling the `check` method within the `NB_Account` class. This will give you a quick overview of your account. As with the Single endpoint you can access the result via the `response` property and the raw JSON via the `response_raw` property. We have also provided a couple helpers to make it easier to extract the data.
+
+``` PHP
+$account = \NeverBounce\API\NB_Account::check();
+var_dump($account->response);
+```
+``` PHP
+object(stdClass)#5 (5) {
+  ["success"]=>bool(true)
+  ["credits"]=>string(7) "9085992"
+  ["jobs_completed"]=>string(2) "39"
+  ["jobs_processing"]=>string(1) "4"
+  ["execution_time"]=>float(0.064954996109009)
+}
+```
+
+###balance()
+This returns your current credit balance.
+
+``` PHP
+$account = \NeverBounce\API\NB_Account::check();
+var_dump($account->balance());
+```
+
+###jobs_completed()
+This returns how many completed jobs that you have run through the bulk endpoint or through the dashboard
+
+``` PHP
+$account = \NeverBounce\API\NB_Account::check();
+var_dump($account->jobs_completed());
+```
+
+###jobs_processing()
+This returns how many running jobs that you have processing through the bulk endpoint or through the dashboard
+
+``` PHP
+$account = \NeverBounce\API\NB_Account::check();
+var_dump($account->jobs_processing());
 ```
 
 Changes
