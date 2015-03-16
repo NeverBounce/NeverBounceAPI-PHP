@@ -97,20 +97,22 @@ class NB_Bulk
     /**
      * Get list of all jobs
      *
+     * @todo: fix list_user_jobs endpoint
+     *
      * @return $this
      */
     public function get()
     {
-        $this->jobs = [];
-
-        if ($this->cache)
-            $post['build_sync_cache'] = 1;
-
-        $this->request('list_user_jobs', $post);
-
-        foreach ($this->response->jobs as $job) {
-            array_push($this->jobs, new NB_Job($job));
-        }
+//        $this->jobs = [];
+//
+//        if ($this->cache)
+//            $post['build_sync_cache'] = 1;
+//
+//        $this->request('list_user_jobs', $post);
+//
+//        foreach ($this->response->jobs as $job) {
+//            array_push($this->jobs, new NB_Job($job));
+//        }
 
         return $this;
     }
@@ -153,13 +155,15 @@ class NB_Bulk
     /**
      * Deletes the job data
      *
+     * @todo: fix delete_user_job endpoint
+     *
      * @throws NB_Exception
      */
     public function delete($job)
     {
-        $this->request('delete_user_job', [
-            'job_id' => $job
-        ]);
+//        $this->request('delete_user_job', [
+//            'job_id' => $job
+//        ]);
     }
 
     /**
