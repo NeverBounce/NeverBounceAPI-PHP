@@ -101,7 +101,7 @@ class NB_Auth
         $this->_request("access_token",
             [
                 'grant_type' => 'client_credentials',
-                'scope' => 'basic user',
+                'scope' => 'basic user web',
             ]);
 
         $this->set_opt(CURLOPT_USERPWD, $this->appID . ":" . $this->secretKey);

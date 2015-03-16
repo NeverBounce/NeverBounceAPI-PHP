@@ -65,14 +65,13 @@ trait NB_App
      * @param array $data
      * @throws NB_Exception
      */
-    protected function request($endpoint, $data = [])
+    protected function request($endpoint, $data = [], $json = true)
     {
         if (!NB_Auth::auth()->token())
             throw new NB_Exception("No access token is present, perhaps NB_Auth was not started");
 
         $data['access_token'] = NB_Auth::auth()->token();
-
-        $this->_request($endpoint, $data);
+        $this->_request($endpoint, $data, $json);
         $this->exec_curl();
     }
 }
