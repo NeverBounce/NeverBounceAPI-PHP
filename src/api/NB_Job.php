@@ -91,7 +91,7 @@ class NB_Job {
     public function percentage($of = 'total', $accuracy = 2)
     {
 
-        if ($this->state < self::JOB_RUNNING || $this->state > self::JOB_COMPLETE || !isset($this->$of))
+        if ($this->state < self::JOB_RUNNING || $this->state > self::JOB_COMPLETE || !isset($this->$of) || !is_numeric($this->$of))
             return null;
 
         $total = $this->total;
@@ -113,7 +113,7 @@ class NB_Job {
     public function total($of = 'total')
     {
 
-        if ($this->state < self::JOB_RUNNING || $this->state > self::JOB_COMPLETE || !isset($this->$of))
+        if ($this->state < self::JOB_RUNNING || $this->state > self::JOB_COMPLETE || !isset($this->$of) || !is_numeric($this->$of))
             return null;
 
         if (empty($this->$of))
