@@ -38,18 +38,25 @@ trait NB_Curl
     protected $debug = false;
 
     /**
+     * @var bool Indicates if expected response should be json
+     */
+    protected $json = true;
+
+    /**
      *
      * @param string $endpoint string Endpoint to use
      * @param array $data Post data for endpoint
      *
      * @throws \NeverBounce\API\NB_Exception
      */
-    private function _request($endpoint, array $data = [])
+    private function _request($endpoint, array $data = [], $json = true)
     {
-
         if ($endpoint == null) {
             throw new NB_Exception('No endpoint was supplied');
         }
+
+        if ($json === false)
+            $this->json = false;
 
         // Start request
         $this->curl = curl_init(sprintf($this->apiBase, NB_Auth::auth()->router(), NB_Auth::auth()->version()) . $endpoint);
@@ -75,7 +82,8 @@ trait NB_Curl
         $this->response_raw = curl_exec($this->curl);
         $this->response = json_decode($this->response_raw);
 
-        if (!is_object($this->response) || !$this->response->success)
+        if (($this->json && (!is_object($this->response) || !$this->response->success))
+            || (!$this->json && is_object($this->response)))
             $this->handleError();
 
         $this->close_curl();
