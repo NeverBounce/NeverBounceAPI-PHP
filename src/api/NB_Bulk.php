@@ -62,6 +62,43 @@ class NB_Bulk
     }
 
     /**
+     * Creates a new job and starts sampling it
+     * 
+     * @param $input Either a string containing csv data or a url to a csv
+     * @param $input_location Denotes whether $input is the data or a url to the data
+     * @param string $filename The filename this job will run under, by default a generic name will be supplied
+     * @return NB_Bulk
+     */
+    public function sample($input, $input_location, $filename = null)
+    {
+        if (empty($filename))
+            $filename = $this->generateFilename();
+
+        $this->request('bulk', [
+            'input' => $input,
+            'input_location' => $input_location,
+            'filename' => $filename,
+            'run_sample' => 1
+        ]);
+
+        if(isset($this->response->job_id))
+            $this->retrieve($this->response->job_id);
+
+        return $this;
+    }
+
+    /**
+     * Starts a job waiting to be started (after a sample has been run)
+     * @param  int $id The id of the job to start
+     */
+    public function start($id)
+    {
+        $this->request('start_job', [
+            'job_id' => $id
+        ]);
+    }
+
+    /**
      * Generate a new filename
      *
      * @return string
