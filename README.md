@@ -17,14 +17,14 @@ This package takes advantage of composer's autoloading features, following the P
 
 To install using composer you can run
 ``` bash
-composer require "neverbounce/neverbounce-php":3.0.*
+composer require "neverbounce/neverbounce-php":dev-master
 ```
 
 Or add this to your composer.json
 ``` javascript
 {
   "require": {
-    "neverbounce/neverbounce-php":3.0.*
+    "neverbounce/neverbounce-php":dev-master
   }
 }
 ```
