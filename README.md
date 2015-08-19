@@ -219,6 +219,15 @@ $job = NB_Bulk::app()->create(<INPUT>, <INPUT_LOCATION>[, <FILENAME>]);
 var_dump($job->first());
 ```
 
+###sample()
+This method allows you to start a free analysis on your data. Read more about the list analysis (here)[https://docs.neverbounce.com/#methods-bulk-free-analysis]. This function takes the same parameters as the `create` method above. Once you have completed an analysis you can then run a full validation using the `start` method.
+
+``` php
+use \NeverBounce\API\NB_Bulk;
+$job = NB_Bulk::app()->sample(<INPUT>, <INPUT_LOCATION>[, <FILENAME>]);
+var_dump($job->first());
+```
+
 ####Input & Input Location
 
 The `bulk` endpoint allows email lists to be passed to it two different ways using the `input_location` parameter.
@@ -267,6 +276,15 @@ ID, Email, Name, Department\n
 1, joe@example.com, Joe, Accounting\n
 2, alice@example.com, Alice, Accounting\n
 3, tom@example.com, Tom, Billing\n
+```
+
+###start()
+
+This method allows you to run a full validation on a job you have started with the `sample` method.
+
+``` php
+use \NeverBounce\API\NB_Bulk;
+NB_Bulk::app()->start(<JOB_ID>);
 ```
 
 ###download()
