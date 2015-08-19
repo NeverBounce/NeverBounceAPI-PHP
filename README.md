@@ -55,7 +55,7 @@ Once you've authenticated you can use the endpoints freely. To validate an email
 
 ``` PHP
 // Verify an email
-$email = \NeverBounce\API\NB_Single::verify(<EMAIL>);
+$email = \NeverBounce\API\NB_Single::app()->verify(<EMAIL>);
 var_dump($email->response);
 ```
 ``` PHP
@@ -71,7 +71,7 @@ object(stdClass)#5 (4) {
 This method will check to see if the the validation result matches the desired result code and will return either true or false. It accepts result codes in either string, integer or array formats. 
 
 ``` PHP
-$email = \NeverBounce\API\NB_Single::verify(<EMAIL>);
+$email = \NeverBounce\API\NB_Single::app()->verify(<EMAIL>);
 
 // Returns true if email is valid
 $email->is('valid');
@@ -97,7 +97,7 @@ $email->is([0,3]);
 This method returns a human readable string for the validation result. The strings returned are 'Valid', 'Invalid', 'Disposable', 'Catchall', and 'Unknown'.
 
 ``` PHP
-$email = \NeverBounce\API\NB_Single::verify(<EMAIL>);
+$email = \NeverBounce\API\NB_Single::app()->verify(<EMAIL>);
 
 // Returns 'Valid' if email is valid
 $email->definition();
@@ -108,7 +108,7 @@ Account
 The account class can be accessed by calling the `check` method within the `NB_Account` class. This will give you a quick overview of your account. As with the Single endpoint you can access the result via the `response` property and the raw JSON via the `response_raw` property. We have also provided a couple helpers to make it easier to extract the data.
 
 ``` PHP
-$account = \NeverBounce\API\NB_Account::check();
+$account = \NeverBounce\API\NB_Account::app()->check();
 var_dump($account->response);
 ```
 ``` PHP
@@ -125,7 +125,7 @@ object(stdClass)#5 (5) {
 This returns your current credit balance.
 
 ``` PHP
-$account = \NeverBounce\API\NB_Account::check();
+$account = \NeverBounce\API\NB_Account::app()->check();
 var_dump($account->balance());
 ```
 
@@ -133,7 +133,7 @@ var_dump($account->balance());
 This returns how many completed jobs that you have run through the bulk endpoint or through the dashboard
 
 ``` PHP
-$account = \NeverBounce\API\NB_Account::check();
+$account = \NeverBounce\API\NB_Account::app()->check();
 var_dump($account->jobs_completed());
 ```
 
@@ -141,7 +141,7 @@ var_dump($account->jobs_completed());
 This returns how many running jobs that you have processing through the bulk endpoint or through the dashboard
 
 ``` PHP
-$account = \NeverBounce\API\NB_Account::check();
+$account = \NeverBounce\API\NB_Account::app()->check();
 var_dump($account->jobs_processing());
 ```
 
