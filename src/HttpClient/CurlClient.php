@@ -1,5 +1,7 @@
 <?php namespace NeverBounce\HttpClient;
 
+use NeverBounce\Auth;
+
 class CurlClient implements ClientInterface {
 
     const DEFAULT_TIMEOUT = 90;
@@ -44,12 +46,13 @@ class CurlClient implements ClientInterface {
     }
 
     /**
-     * @param $url
+     * @param string $url
      * @param array $params
+     * @param bool $auth
      * @return array
      * @throws Error\ApiConnection
      */
-    public function request($url, array $params = [])
+    public function request($url, array $params = [], $auth = false)
     {
         $curl = curl_init();
         $opts = [];
@@ -82,6 +85,10 @@ class CurlClient implements ClientInterface {
             $opts[CURLOPT_POSTFIELDS] = http_build_query($params);
         }
 
+        if($auth === true) {
+            $opts[CURLOPT_USERPWD] = Auth::getApiKey() . ":" . Auth::getApiSecret();
+        }
+
         curl_setopt_array($curl, $opts);
         $resBody = curl_exec($curl);
 
@@ -95,7 +102,7 @@ class CurlClient implements ClientInterface {
 
         $resCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
-        return array($resBody, $resCode, $resHeaders);
+        return [$resBody, $resCode, $resHeaders];
     }
 
     /**
