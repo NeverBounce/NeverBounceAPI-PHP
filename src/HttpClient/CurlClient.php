@@ -1,6 +1,8 @@
 <?php namespace NeverBounce\HttpClient;
 
 use NeverBounce\Auth;
+use NeverBounce\Error\ApiConnection;
+use NeverBounce\Utils;
 
 class CurlClient implements ClientInterface {
 
@@ -50,11 +52,11 @@ class CurlClient implements ClientInterface {
      * @param array $params
      * @param bool $auth
      * @return array
-     * @throws Error\ApiConnection
+     * @throws ApiConnection
      */
     public function request($url, array $params = [], $auth = false)
     {
-        $curl = curl_init();
+        $curl = curl_init($url);
         $opts = [];
 
         // Create a callback to capture HTTP headers for the response
@@ -109,7 +111,7 @@ class CurlClient implements ClientInterface {
      * @param string $url
      * @param number $errno
      * @param string $message
-     * @throws Error\ApiConnection
+     * @throws ApiConnection
      */
     private function handleCurlError($url, $errno, $message)
     {
@@ -134,7 +136,7 @@ class CurlClient implements ClientInterface {
         }
         $msg .= " let us know at support@neverbounce.com.";
         $msg .= "\n\n(Network error [errno $errno]: $message)";
-        throw new Error\ApiConnection($msg);
+        throw new ApiConnection($msg);
     }
 
 }

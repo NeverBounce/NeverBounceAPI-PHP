@@ -28,7 +28,7 @@ class ApiClient {
     public function request($endpoint, array $params = [])
     {
         $url = Auth::getUrl() . $endpoint;
-        $params['access_token'] = OAuthClient::getAccessToken();
+        $params['access_token'] = OAuthClient::getAccessToken($this->client);
         $res = $this->client->request($url, $params);
         return $this->response($res);
     }
