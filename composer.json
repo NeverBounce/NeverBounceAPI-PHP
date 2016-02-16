@@ -17,7 +17,7 @@
     ],
     "autoload" : {
         "psr-4" : {
-            "NeverBounce\\API\\": "src/api/"
+            "NeverBounce\\": "src/"
         }
     },
     "require-dev": {
