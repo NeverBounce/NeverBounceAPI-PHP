@@ -2,6 +2,7 @@
 
 use NeverBounce\Error\Api;
 use NeverBounce\HttpClient\ClientInterface;
+use NeverBounce\HttpClient\CurlClient;
 
 class ApiClient {
 
@@ -14,9 +15,9 @@ class ApiClient {
      * ApiClient constructor.
      * @param ClientInterface $clientInterface
      */
-    public function __construct(ClientInterface $clientInterface)
+    public function __construct(ClientInterface $clientInterface = null)
     {
-        $this->client = $clientInterface;
+        $this->client = $clientInterface ?: new CurlClient();
     }
 
     /**

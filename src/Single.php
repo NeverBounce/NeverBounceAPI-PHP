@@ -2,12 +2,15 @@
 
 use NeverBounce\Object\Verification;
 
-class Single {
+class Single extends ApiClient {
 
+    /**
+     * @param $email
+     * @return Verification
+     */
     public static function verify($email)
     {
-        $client = new HttpClient\CurlClient();
-        $api = new ApiClient($client);
+        $api = new self();
         $res = $api->request('single', ['email' => $email]);
         return new Verification($email, $res['result']);
     }
