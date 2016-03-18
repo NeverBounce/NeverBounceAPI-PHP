@@ -7,7 +7,7 @@ This is the official NeverBounce API PHP wrapper. It provides helpful methods to
 * PHP JSON extension
 * PHP cURL extension
 
-Be sure to familiarize yourself with the API by visiting the [documentation](http://docs.neverbounce.com).
+Be sure to familiarize yourself with the API by visiting the [documentation](https://neverbounce.com/help/api/getting-started-with-the-api/).
 
 Installation
 ============
@@ -41,12 +41,14 @@ Authentication
 --------------
 With our PHP wrapper authentication can be done by calling the `NB_Auth` class and running the `auth` method. Don't worry about passing a router or version if you do not have these details. Make sure to do this before making any requests with the wrapper or you will receive an authentication error. Placing this in the startup or config of your application is recommended.
 
+Find your credetials [here](https://app.neverbounce.com/settings/api)
+
 ``` PHP
-// API_KEY Your API secret key
-// APP_ID Your API app id
+// API_KEY Your API username
+// API_SECRET_KEY Your API secret key
 // ROUTER Your API sub domain http://<route>.neverbounce.com
 // VERSION The api version to use
-\NeverBounce\API\NB_Auth::auth(<API_KEY>, <APP_ID>, [<ROUTER>, [<VERSION>]]);
+\NeverBounce\API\NB_Auth::auth(<API_KEY>, <API_SECRET_KEY>, [<ROUTER>, [<VERSION>]]);
 ```
 
 Single
