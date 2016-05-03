@@ -48,7 +48,7 @@ Find your credetials [here](https://app.neverbounce.com/settings/api)
 // API_SECRET_KEY Your API secret key
 // ROUTER Your API sub domain http://<route>.neverbounce.com
 // VERSION The api version to use
-\NeverBounce\API\NB_Auth::auth(<API_KEY>, <API_SECRET_KEY>, [<ROUTER>, [<VERSION>]]);
+\NeverBounce\API\NB_Auth::auth(<API_SECRET_KEY>, <API_KEY>, [<ROUTER>, [<VERSION>]]);
 ```
 
 Single
