@@ -7,7 +7,7 @@ This is the official NeverBounce API PHP wrapper. It provides helpful methods to
 * PHP JSON extension
 * PHP cURL extension
 
-Be sure to familiarize yourself with the API by visiting the [documentation](http://docs.neverbounce.com).
+Be sure to familiarize yourself with the API by visiting the [documentation](https://neverbounce.com/help/api/getting-started-with-the-api/).
 
 Installation
 ============
@@ -17,14 +17,14 @@ This package takes advantage of composer's autoloading features, following the P
 
 To install using composer you can run
 ``` bash
-composer require "neverbounce/neverbounce-php":3.0.*
+composer require "neverbounce/neverbounce-php":dev-master
 ```
 
 Or add this to your composer.json
 ``` javascript
 {
   "require": {
-    "neverbounce/neverbounce-php":3.0.*
+    "neverbounce/neverbounce-php":dev-master
   }
 }
 ```
@@ -41,12 +41,14 @@ Authentication
 --------------
 With our PHP wrapper authentication can be done by calling the `NB_Auth` class and running the `auth` method. Don't worry about passing a router or version if you do not have these details. Make sure to do this before making any requests with the wrapper or you will receive an authentication error. Placing this in the startup or config of your application is recommended.
 
+Find your credetials [here](https://app.neverbounce.com/settings/api)
+
 ``` PHP
-// API_KEY Your API secret key
-// APP_ID Your API app id
+// API_KEY Your API username
+// API_SECRET_KEY Your API secret key
 // ROUTER Your API sub domain http://<route>.neverbounce.com
 // VERSION The api version to use
-\NeverBounce\API\NB_Auth::auth(<API_KEY>, <APP_ID>, [<ROUTER>, [<VERSION>]]);
+\NeverBounce\API\NB_Auth::auth(<API_SECRET_KEY>, <API_KEY>, [<ROUTER>, [<VERSION>]]);
 ```
 
 Single
@@ -55,7 +57,7 @@ Once you've authenticated you can use the endpoints freely. To validate an email
 
 ``` PHP
 // Verify an email
-$email = \NeverBounce\API\NB_Single::verify(<EMAIL>);
+$email = \NeverBounce\API\NB_Single::app()->verify(<EMAIL>);
 var_dump($email->response);
 ```
 ``` PHP
@@ -71,7 +73,7 @@ object(stdClass)#5 (4) {
 This method will check to see if the the validation result matches the desired result code and will return either true or false. It accepts result codes in either string, integer or array formats. 
 
 ``` PHP
-$email = \NeverBounce\API\NB_Single::verify(<EMAIL>);
+$email = \NeverBounce\API\NB_Single::app()->verify(<EMAIL>);
 
 // Returns true if email is valid
 $email->is('valid');
@@ -97,7 +99,7 @@ $email->is([0,3]);
 This method returns a human readable string for the validation result. The strings returned are 'Valid', 'Invalid', 'Disposable', 'Catchall', and 'Unknown'.
 
 ``` PHP
-$email = \NeverBounce\API\NB_Single::verify(<EMAIL>);
+$email = \NeverBounce\API\NB_Single::app()->verify(<EMAIL>);
 
 // Returns 'Valid' if email is valid
 $email->definition();
@@ -108,7 +110,7 @@ Account
 The account class can be accessed by calling the `check` method within the `NB_Account` class. This will give you a quick overview of your account. As with the Single endpoint you can access the result via the `response` property and the raw JSON via the `response_raw` property. We have also provided a couple helpers to make it easier to extract the data.
 
 ``` PHP
-$account = \NeverBounce\API\NB_Account::check();
+$account = \NeverBounce\API\NB_Account::app()->check();
 var_dump($account->response);
 ```
 ``` PHP
@@ -125,7 +127,7 @@ object(stdClass)#5 (5) {
 This returns your current credit balance.
 
 ``` PHP
-$account = \NeverBounce\API\NB_Account::check();
+$account = \NeverBounce\API\NB_Account::app()->check();
 var_dump($account->balance());
 ```
 
@@ -133,7 +135,7 @@ var_dump($account->balance());
 This returns how many completed jobs that you have run through the bulk endpoint or through the dashboard
 
 ``` PHP
-$account = \NeverBounce\API\NB_Account::check();
+$account = \NeverBounce\API\NB_Account::app()->check();
 var_dump($account->jobs_completed());
 ```
 
@@ -141,7 +143,7 @@ var_dump($account->jobs_completed());
 This returns how many running jobs that you have processing through the bulk endpoint or through the dashboard
 
 ``` PHP
-$account = \NeverBounce\API\NB_Account::check();
+$account = \NeverBounce\API\NB_Account::app()->check();
 var_dump($account->jobs_processing());
 ```
 
@@ -219,6 +221,15 @@ $job = NB_Bulk::app()->create(<INPUT>, <INPUT_LOCATION>[, <FILENAME>]);
 var_dump($job->first());
 ```
 
+###sample()
+This method allows you to start a free analysis on your data. Read more about the list analysis (here)[https://docs.neverbounce.com/#methods-bulk-free-analysis]. This function takes the same parameters as the `create` method above. Once you have completed an analysis you can then run a full validation using the `start` method.
+
+``` php
+use \NeverBounce\API\NB_Bulk;
+$job = NB_Bulk::app()->sample(<INPUT>, <INPUT_LOCATION>[, <FILENAME>]);
+var_dump($job->first());
+```
+
 ####Input & Input Location
 
 The `bulk` endpoint allows email lists to be passed to it two different ways using the `input_location` parameter.
@@ -267,6 +278,15 @@ ID, Email, Name, Department\n
 1, joe@example.com, Joe, Accounting\n
 2, alice@example.com, Alice, Accounting\n
 3, tom@example.com, Tom, Billing\n
+```
+
+###start()
+
+This method allows you to run a full validation on a job you have started with the `sample` method.
+
+``` php
+use \NeverBounce\API\NB_Bulk;
+NB_Bulk::app()->start(<JOB_ID>);
 ```
 
 ###download()

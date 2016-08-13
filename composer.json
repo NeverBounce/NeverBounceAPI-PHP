@@ -13,6 +13,10 @@
         {
             "name": "Michael Mollick",
             "email": "mike@creavos.com"
+        },
+        {
+            "name": "Ankur Pandit",
+            "email": "ankur@neverbounce.com"
         }
     ],
     "autoload" : {

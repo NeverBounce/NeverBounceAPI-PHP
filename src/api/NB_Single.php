@@ -77,7 +77,13 @@ class NB_Single
 
         return $this;
     }
-
+    
+    /**
+     * This returns the true or false depending on the flags passed via $types
+     *
+     * @param mixed $types
+     * @return $this
+     */
     public function is($types)
     {
         if (is_array($types)) {
@@ -105,7 +111,7 @@ class NB_Single
     }
 
     /**
-     * Gets teh definition for the state
+     * Gets the definition for the state
      * @return string
      */
     public function definition()
