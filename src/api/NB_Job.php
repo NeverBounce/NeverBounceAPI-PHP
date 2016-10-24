@@ -61,7 +61,7 @@ class NB_Job {
         if (property_exists($job, 'cache_token'))
             $this->cache_token = (string)$job->cache_token;
 
-        $this->purchased = (bool)$job->purchased;
+        //$this->purchased = (bool)$job->purchased;
         $this->type = (integer)$job->type;
         $this->input_location = (integer)$job->input_location;
         $this->started = (integer)strtotime($job->created);
