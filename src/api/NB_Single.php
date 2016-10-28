@@ -92,7 +92,7 @@ class NB_Single
                     return true;
                 }
 
-                if (is_numeric($type) && $types == $this->response->result) {
+                if (is_numeric($type) && $type == $this->response->result) {
                     return true;
                 }
             }
