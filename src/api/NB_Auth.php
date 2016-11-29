@@ -113,8 +113,6 @@ class NB_Auth
 
     /**
      * Executes a new curl request
-     *
-     * @return bool
      */
     private function exec_curl()
     {
