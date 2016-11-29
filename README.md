@@ -17,14 +17,14 @@ This package takes advantage of composer's autoloading features, following the P
 
 To install using composer you can run
 ``` bash
-composer require "neverbounce/neverbounce-php":dev-master
+composer require "neverbounce/neverbounce-php":"dev-master"
 ```
 
 Or add this to your composer.json
 ``` javascript
 {
   "require": {
-    "neverbounce/neverbounce-php":dev-master
+    "neverbounce/neverbounce-php":"dev-master"
   }
 }
 ```
@@ -41,11 +41,11 @@ Authentication
 --------------
 With our PHP wrapper authentication can be done by calling the `NB_Auth` class and running the `auth` method. Don't worry about passing a router or version if you do not have these details. Make sure to do this before making any requests with the wrapper or you will receive an authentication error. Placing this in the startup or config of your application is recommended.
 
-Find your credetials [here](https://app.neverbounce.com/settings/api)
+Find your credentials [here](https://app.neverbounce.com/settings/api)
 
 ``` PHP
-// API_KEY Your API username
 // API_SECRET_KEY Your API secret key
+// API_KEY Your API username
 // ROUTER Your API sub domain http://<route>.neverbounce.com
 // VERSION The api version to use
 \NeverBounce\API\NB_Auth::auth(<API_SECRET_KEY>, <API_KEY>, [<ROUTER>, [<VERSION>]]);
