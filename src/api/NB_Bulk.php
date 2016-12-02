@@ -96,6 +96,9 @@ class NB_Bulk
         $this->request('start_job', [
             'job_id' => $id
         ]);
+
+        $this->retrieve($id);
+        return $this;
     }
 
     /**
