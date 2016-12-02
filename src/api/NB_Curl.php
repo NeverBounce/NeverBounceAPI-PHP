@@ -18,7 +18,7 @@ trait NB_Curl
     public $response_raw;
 
     /**
-     * @var array JSON Decoded response from cURL request
+     * @var \stdClass JSON Decoded response from cURL request
      */
     public $response;
 
@@ -74,8 +74,6 @@ trait NB_Curl
 
     /**
      * Executes a new curl request
-     *
-     * @return bool
      */
     private function exec_curl()
     {

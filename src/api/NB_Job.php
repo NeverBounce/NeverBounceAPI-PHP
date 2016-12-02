@@ -53,6 +53,7 @@ class NB_Job {
 
     /**
      * @param $job
+	 * @param bool $sync
      */
     public function __construct($job, $sync = false)
     {

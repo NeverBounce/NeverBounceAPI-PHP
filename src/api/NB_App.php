@@ -63,6 +63,7 @@ trait NB_App
      *
      * @param $endpoint
      * @param array $data
+	 * @param bool $json
      * @throws NB_Exception
      */
     protected function request($endpoint, $data = [], $json = true)

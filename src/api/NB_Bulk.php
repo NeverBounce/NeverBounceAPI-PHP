@@ -39,8 +39,8 @@ class NB_Bulk
     /**
      * Create a new job
      *
-     * @param $input Either a string containing csv data or a url to a csv
-     * @param $input_location Denotes whether $input is the data or a url to the data
+     * @param string $input Either a string containing csv data or a url to a csv
+     * @param string $input_location Denotes whether $input is the data or a url to the data
      * @param string $filename The filename this job will run under, by default a generic name will be supplied
      * @return NB_Bulk
      */
@@ -64,8 +64,8 @@ class NB_Bulk
     /**
      * Creates a new job and starts sampling it
      * 
-     * @param $input Either a string containing csv data or a url to a csv
-     * @param $input_location Denotes whether $input is the data or a url to the data
+     * @param string $input Either a string containing csv data or a url to a csv
+     * @param string $input_location Denotes whether $input is the data or a url to the data
      * @param string $filename The filename this job will run under, by default a generic name will be supplied
      * @return NB_Bulk
      */

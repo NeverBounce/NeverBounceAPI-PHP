@@ -40,8 +40,6 @@ class NB_Single
      * @var array
      */
     protected $types = [
-        'good' => self::GOOD,
-        'bad' => self::BAD,
         'valid' => self::GOOD,
         'good' => self::GOOD, // Alias
         'invalid' => self::BAD,
@@ -81,13 +79,14 @@ class NB_Single
 
         return $this;
     }
-    
-    /**
-     * This returns the true or false depending on the flags passed via $types
-     *
-     * @param mixed $types
-     * @return $this
-     */
+
+	/**
+	 * This returns the true or false depending on the flags passed via $types
+	 *
+	 * @param mixed $types
+	 *
+	 * @return bool
+	 */
     public function is($types)
     {
         if (is_array($types)) {
