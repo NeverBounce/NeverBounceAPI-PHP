@@ -73,6 +73,10 @@ class NB_Single
      */
     public function verify($email)
     {
+        // Sanitize aliases; http_build_query does not encode (+) and
+        // x-www-urlencode-form treats these as spaces
+        $email = str_replace('+', '%2B', $email);
+
         $this->request('single', ['email' => $email]);
 
         return $this;
