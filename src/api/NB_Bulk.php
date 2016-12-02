@@ -120,11 +120,11 @@ class NB_Bulk
         $this->jobs = [];
         if (is_array($jobs)) {
             foreach ($jobs as $job) {
-                $this->request('status', ['job_id' => $job]);
+                $this->request('status', ['version' => '3.1', 'job_id' => $job]);
                 array_push($this->jobs, new NB_Job($this->response));
             }
         } else {
-            $this->request('status', ['job_id' => $jobs]);
+            $this->request('status', ['version' => '3.1', 'job_id' => $jobs]);
             array_push($this->jobs, new NB_Job($this->response));
         }
 

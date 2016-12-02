@@ -77,6 +77,9 @@ class NB_Job {
         $this->disposable = (integer)$job->stats->disposable;
         $this->unknown = (integer)$job->stats->unknown;
 
+        if(property_exists($job, 'job_details'))
+            $this->job_details = (object)$job->job_details;
+
         return $this;
     }
 
