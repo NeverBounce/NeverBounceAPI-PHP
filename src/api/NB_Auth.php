@@ -79,6 +79,24 @@ class NB_Auth
     }
 
     /**
+     * Sets the CURLOPT_TIMEOUT option for cURL;
+     * When the timeout is hit an NB_Exception will be thrown
+     * @param $timeout
+     * @throws NB_Exception
+     */
+    public static function setTimeout($timeout)
+    {
+        if(!is_int($timeout))
+            throw new NB_Exception("Timeout should be expressed in seconds and must be an integer; " . gettype($timeout) . " given");
+
+        if (!(self::$instance instanceof self)) {
+            self::$instance = new self();
+        }
+
+        self::$instance->timeout = $timeout;
+    }
+
+    /**
      * Requests a new access token from the API,
      * we don't store the access token so we won't
      * worry about the expiration. On execution we
@@ -175,20 +193,6 @@ class NB_Auth
             $this->request_token();
 
         return $this->access_token;
-    }
-
-    /**
-     * Sets the CURLOPT_TIMEOUT option for cURL;
-     * When the timeout is hit an NB_Exception will be thrown
-     * @param $timeout
-     * @throws NB_Exception
-     */
-    public function setTimeout($timeout)
-    {
-        if(!is_int($timeout))
-            throw new NB_Exception("Timeout should be expressed in seconds and must be an integer; " . gettype($timeout) . " given");
-
-        $this->timeout = $timeout;
     }
 
     /**
