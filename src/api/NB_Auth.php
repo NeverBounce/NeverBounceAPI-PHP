@@ -41,9 +41,10 @@ class NB_Auth
     protected $access_token = null;
 
     /**
+     * 0 = no timeout; this is the default value for backwards compatibility
      * @var int Time in seconds for cUrl timeout
      */
-    protected $timeout = 30;
+    protected $timeout = 0;
 
     /**
      * Instantiates an auth object
