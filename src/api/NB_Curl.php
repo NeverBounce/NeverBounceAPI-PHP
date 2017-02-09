@@ -70,6 +70,7 @@ trait NB_Curl
         $this->set_opt(CURLOPT_RETURNTRANSFER, true);
         $this->set_opt(CURLOPT_POST, true);
         $this->set_opt(CURLOPT_POSTFIELDS, http_build_query($data));
+        $this->set_opt(CURLOPT_TIMEOUT, NB_Auth::auth()->timeout());
     }
 
     /**

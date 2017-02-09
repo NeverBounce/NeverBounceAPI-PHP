@@ -41,6 +41,11 @@ class NB_Auth
     protected $access_token = null;
 
     /**
+     * @var int Time in seconds for cUrl timeout
+     */
+    protected $timeout = 30;
+
+    /**
      * Instantiates an auth object
      * Simply pass in your credentials here, don't worry about
      * passing in a router or version if you were not given one.
@@ -170,5 +175,27 @@ class NB_Auth
             $this->request_token();
 
         return $this->access_token;
+    }
+
+    /**
+     * Sets the CURLOPT_TIMEOUT option for cURL
+     * @param $timeout
+     * @throws NB_Exception
+     */
+    public function setTimeout($timeout)
+    {
+        if(!is_int($timeout))
+            throw new NB_Exception("Timeout should be expressed in seconds and must be an integer; " . gettype($timeout) . " given");
+
+        $this->timeout = $timeout;
+    }
+
+    /**
+     * Returns hard timeout
+     * @return int
+     */
+    public function timeout()
+    {
+        return $this->timeout;
     }
 }
