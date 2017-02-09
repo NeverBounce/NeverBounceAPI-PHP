@@ -178,7 +178,8 @@ class NB_Auth
     }
 
     /**
-     * Sets the CURLOPT_TIMEOUT option for cURL
+     * Sets the CURLOPT_TIMEOUT option for cURL;
+     * When the timeout is hit an NB_Exception will be thrown
      * @param $timeout
      * @throws NB_Exception
      */
