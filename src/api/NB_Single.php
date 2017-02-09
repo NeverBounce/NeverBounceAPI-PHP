@@ -64,18 +64,34 @@ class NB_Single
 
     /**
      * This performs a single validation
+     * The timeout for this method is not the same as the cUrl timeout! It is
+     * not a connection timeout but rather a timeout for how long the API will
+     * attempt to verify the email. It is also a soft timeout; i.e. a value of 5
+     * may spend go over the timeout by a few milliseconds before giving up.
      *
      * @param string $email The email to verify
-     *
+     * @param int $timeout The maximum time to spend verifying the email; this is an approximate timeout not a hard timeout
      * @return $this
+     * @throws NB_Exception
      */
-    public function verify($email)
+    public function verify($email, $timeout = null)
     {
         // Sanitize aliases; http_build_query does not encode (+) and
         // x-www-urlencode-form treats these as spaces
         $email = str_replace('+', '%2B', $email);
 
-        $this->request('single', ['email' => $email]);
+        $params = [
+            'email' => $email
+        ];
+
+        if($timeout) {
+            if(!is_int($timeout))
+                throw new NB_Exception("Timeout should be expressed in seconds and must be an integer; " . gettype($timeout) . " given");
+
+            $params['timeout'] = $timeout;
+        }
+
+        $this->request('single', $params);
 
         return $this;
     }
