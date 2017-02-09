@@ -51,13 +51,24 @@ Find your credentials [here](https://app.neverbounce.com/settings/api)
 \NeverBounce\API\NB_Auth::auth(<API_SECRET_KEY>, <API_KEY>, [<ROUTER>, [<VERSION>]]);
 ```
 
+The authentication class also allows you to set a hard connection timeout (CURLOPT_TIMEOUT). By default the timeout is set to `0` effectively meaning a timeout is not set. A hard timeout will produce an exception when it occurs. To set a hard connection timeout use the following sample:
+
+```PHP
+// Set cURL timeout
+\NeverBounce\API\NB_Auth::setTimeout(<TIME_IN_SECONDS>);
+```
+
+When using the single verification it is recommended to set a verification timeout using the `verify` method described in the `Single` section below. The verification timeout will produce a more graceful response.
+
 Single
 ------
 Once you've authenticated you can use the endpoints freely. To validate an email use the `verify` method in the `NB_Single` class. The result is stored in the `response` property in this class, you can also find the raw JSON response in the `response_raw` property. We have included two additional methods in this class so you can easily check the result or get a human readable result.
 
 ``` PHP
 // Verify an email
-$email = \NeverBounce\API\NB_Single::app()->verify(<EMAIL>);
+// VERIFICATION_TIMEOUT is optional. You can specify a maximum amount of time in seconds before we respond
+//    (this is a soft limit and may exceed the limit by several milliseconds)
+$email = \NeverBounce\API\NB_Single::app()->verify(<EMAIL>[, <VERIFICATION_TIMEOUT>]);
 var_dump($email->response);
 ```
 ``` PHP
