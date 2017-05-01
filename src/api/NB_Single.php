@@ -27,6 +27,12 @@ class NB_Single
     /**
      * Value of a catchall email
      */
+    const CATCHALL = 3;
+
+    /**
+     * Value of a catchall email.
+     * @deprecated Original version with typo.  Retained for backwards compatability.
+     */
     const CATACHALL = 3;
 
     /**
@@ -45,7 +51,7 @@ class NB_Single
         'invalid' => self::BAD,
         'bad' => self::BAD, // Alias
         'disposable' => self::DISPOSABLE,
-        'catchall' => self::CATACHALL,
+        'catchall' => self::CATCHALL,
         'unknown' => self::UNKNOWN,
     ];
 
@@ -58,7 +64,7 @@ class NB_Single
         self::GOOD => 'Valid',
         self::BAD => 'Invalid',
         self::DISPOSABLE => 'Disposable',
-        self::CATACHALL => 'Catchall',
+        self::CATCHALL => 'Catchall',
         self::UNKNOWN => 'Unknown',
     ];
 
