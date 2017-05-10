@@ -1,6 +1,7 @@
 <?php namespace NeverBounce;
 
-class Auth {
+class Auth
+{
     /**
      * @var string
      */
