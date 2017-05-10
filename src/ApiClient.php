@@ -1,10 +1,19 @@
 <?php namespace NeverBounce;
 
-use NeverBounce\Error\Api;
-use NeverBounce\HttpClient\ClientInterface;
+use NeverBounce\Errors\AuthException;
+use NeverBounce\Errors\BadReferrerException;
+use NeverBounce\Errors\GeneralException;
+use NeverBounce\Errors\HttpClientException;
+use NeverBounce\Errors\ThrottleException;
 use NeverBounce\HttpClient\CurlClient;
+use NeverBounce\HttpClient\HttpClientInterface;
 
-class ApiClient {
+class ApiClient
+{
+    /**
+     * @var self
+     */
+    static protected $lastInstance;
 
     /**
      * @var ClientInterface
@@ -12,57 +21,284 @@ class ApiClient {
     protected $client;
 
     /**
-     * ApiClient constructor.
-     * @param ClientInterface $clientInterface
+     * @var string The base url for API requests
      */
-    public function __construct(ClientInterface $clientInterface = null)
+    static protected $baseUrl = 'https://api.neverbounce.com/v4/';
+
+    /**
+     * @var int The maximum number of seconds to allow cURL functions to
+     *     execute.
+     */
+    protected $timeout = 30;
+
+    /**
+     * @var string The content type for this request
+     */
+    protected $contentType = 'application/x-www-form-urlencoded';
+
+    /**
+     * @var array
+     */
+    protected $decodedResponse = [];
+
+    /**
+     * @var string
+     */
+    protected $rawResponse;
+
+    /**
+     * @var
+     */
+    protected $statusCode = 0;
+
+    /**
+     * ApiClient constructor.
+     * @param HttpClientInterface $clientInterface
+     * @throws AuthException
+     */
+    public function __construct(HttpClientInterface $clientInterface = null)
     {
+        // Check for a key
+        if (Auth::getApiKey() === null) {
+            throw new AuthException(
+                'An API key has not been set yet; Use the '
+                . 'NeverBounce\Auth::setApiKey($key) method to '
+                . 'set the key before making a request.');
+        }
+
         $this->client = $clientInterface ?: new CurlClient();
     }
 
     /**
-     * @param $endpoint
-     * @param array $params
-     * @return mixed
-     * @throws Api
+     * @param string $url Set the base URL to use for API requests. This method
+     *     exists for development purposes
      */
-    public function request($endpoint, array $params = [])
+    static public function setBaseUrl($url)
     {
-        $url = Auth::getUrl() . $endpoint;
-        $params['access_token'] = OAuthClient::getAccessToken($this->client);
-        $res = $this->client->request($url, $params);
-        return $this->response($res);
+        self::$baseUrl = $url;
     }
 
     /**
-     * Public only for testing... should not be called directly
-     * @param $response
-     * @return mixed
-     * @throws Api
+     * @param integer $timeout Sets the maximum number of seconds to allow the
+     *     request to execute.
+     * @return $this
      */
-    public function response($response)
+    public function setTimeout($timeout)
     {
-        $decoded = json_decode($response[0], true);
-        if($decoded === null) {
-            throw new Api(
-                "The response from NeverBounce was unable "
-                . "to be parsed as json. Try the request "
-                . "again, if this error persists"
-                . " let us know at support@neverbounce.com."
-                . "\n\n(Internal error [status $response[1]: $response[0])"
-            );
-        }
-
-        if(isset($decoded['msg'])) {
-            throw new Api(
-                "We were unable to complete your request. "
-                . "The following information was supplied: "
-                . "{$decoded['msg']}"
-                . "\n\n(Request error)"
-            );
-        }
-
-        return $decoded;
+        $this->timeout = max((int)$timeout, 0);
+        return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getRawResponse()
+    {
+        return $this->rawResponse;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDecodedResponse()
+    {
+        return $this->decodedResponse;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatusCode()
+    {
+        return $this->statusCode;
+    }
+
+    /**
+     * @param string $contentType Content type for the request; either
+     *     application/x-www-form-urlencoded or application/json
+     * @return $this
+     * @throws \NeverBounce\Errors\HttpClientException
+     */
+    public function setContentType($contentType)
+    {
+        // Throw exception if unsupported content type is specified
+        if (!in_array($contentType,
+            ['application/x-www-form-urlencoded', 'application/json'], true)
+        ) {
+            throw new HttpClientException(
+                'An unsupported content type was supplied. This API '
+                . 'supports either \'application/x-www-form-urlencoded\' '
+                . 'or \'application/json\'.');
+        }
+
+        $this->contentType = $contentType;
+        return $this;
+    }
+
+    /**
+     * @param string $method
+     * @param string $endpoint
+     * @param array $params
+     * @return mixed
+     * @throws \NeverBounce\Errors\ThrottleException
+     * @throws \NeverBounce\Errors\HttpClientException
+     * @throws \NeverBounce\Errors\GeneralException
+     * @throws \NeverBounce\Errors\BadReferrerException
+     * @throws \NeverBounce\Errors\AuthException
+     */
+    public function request($method, $endpoint, array $params = [])
+    {
+        // Set API key parameter
+        $params['key'] = Auth::getApiKey();
+
+        // Encode parameters according to contentType
+        $encodedParams = ($this->contentType === 'application/json') ? json_encode($params) : http_build_query($params);
+
+        // Base url + endpoint resolved
+        $url = self::$baseUrl . $endpoint;
+
+//        var_dump($this->contentType);
+//        var_dump($encodedParams);
+        // If this is a GET request append query to the end of the url
+        if(strtoupper($method) === 'GET') {
+            $this->client->init($url . '?' . $encodedParams);
+        } else {
+            // Assume all other requests are POST and set fields accordingly
+            $this->client->init($url);
+            $this->client->setOpt(CURLOPT_POSTFIELDS, $encodedParams);
+            $this->client->setOpt(CURLOPT_CUSTOMREQUEST, 'POST');
+        }
+
+        // Set options
+        $this->client->setOpt(CURLOPT_HTTPHEADER, [
+            'User-Agent: NeverBounce-PHPSdk/' . Utils::wrapperVersion(),
+            'Content-Type: ' . $this->contentType
+        ]);
+        $this->client->setOpt(CURLOPT_TIMEOUT, $this->timeout);
+        $this->client->setOpt(CURLOPT_RETURNTRANSFER, true);
+
+        $this->rawResponse = $this->client->execute();
+
+        // Catches curl errors
+        if ($this->rawResponse === false) {
+            $errno = $this->client->getErrno();
+            $message = $this->client->getError();
+            $this->client->close();
+            $this->handleCurlError($url, $errno, $message);
+        }
+
+        // Get status code
+        $this->statusCode = $this->client->getInfo(CURLINFO_HTTP_CODE);
+        $this->client->close();
+        return $this->response($this->rawResponse, $this->statusCode);
+    }
+
+    /**
+     * @param string $url
+     * @param integer $errno
+     * @param string $message
+     * @throws HttpClientException
+     */
+    protected function handleCurlError($url, $errno, $message)
+    {
+        switch ($errno) {
+            case CURLE_COULDNT_CONNECT:
+            case CURLE_COULDNT_RESOLVE_HOST:
+            case CURLE_OPERATION_TIMEOUTED:
+                $msg = "Could not connect to NeverBounce ($url).  Please check your "
+                    . 'internet connection and try again.  If this problem persists, '
+                    . 'you should';
+                break;
+            case CURLE_SSL_CACERT:
+            case CURLE_SSL_PEER_CERTIFICATE:
+                $msg = "Could not verify NeverBounce's SSL certificate.  Please make sure "
+                    . 'that your network is not intercepting certificates.  '
+                    . "(Try going to $url in your browser.)  "
+                    . 'If this problem persists,';
+                break;
+            default:
+                $msg = 'Unexpected error communicating with NeverBounce.  '
+                    . 'If this problem persists,';
+        }
+        $msg .= ' let us know at support@neverbounce.com.';
+        $msg .= "\n\n(Network error [errno $errno]: $message)";
+        throw new HttpClientException($msg);
+    }
+
+    /**
+     * Parses the response string and handles any errors
+     * @param $respBody
+     * @param $respCode
+     * @return mixed
+     * @throws AuthException
+     * @throws BadReferrerException
+     * @throws GeneralException
+     * @throws HttpClientException
+     * @throws ThrottleException
+     */
+    protected function response($respBody, $respCode)
+    {
+        $decoded = json_decode($respBody, true);
+
+        // Check if the response was decoded properly
+        if ($decoded === null) {
+            throw new HttpClientException(
+                'The response from NeverBounce was unable '
+                . 'to be parsed as json. Try the request '
+                . 'again, if this error persists'
+                . ' let us know at support@neverbounce.com.'
+                . "\n\n(Internal error [status $respCode: $respBody)"
+            );
+        }
+
+        if ($decoded['status'] !== 'success') {
+
+            switch($decoded['status']) {
+
+                case 'auth_failure':
+                    throw new AuthException(
+                        'We were unable to authenticate your request. '
+                        . 'The following information was supplied: '
+                        . "{$decoded['message']}"
+                        . "\n\n(auth_failure)"
+                    );
+
+                case 'temp_unavail':
+                    throw new GeneralException(
+                        'We were unable to complete your request. '
+                        . 'The following information was supplied: '
+                        . "{$decoded['message']}"
+                        . "\n\n(temp_unavail)"
+                    );
+
+                case 'throttle_triggered':
+                    throw new ThrottleException(
+                        'We were unable to complete your request. '
+                        . 'The following information was supplied: '
+                        . "{$decoded['message']}"
+                        . "\n\n(throttle_triggered)"
+                    );
+
+                case 'bad_referrer':
+                    throw new BadReferrerException(
+                        'We were unable to complete your request. '
+                        . 'The following information was supplied: '
+                        . "{$decoded['message']}"
+                        . "\n\n(bad_referrer)"
+                    );
+
+                case 'general_failure':
+                default:
+                    throw new GeneralException(
+                        'We were unable to complete your request. '
+                        . 'The following information was supplied: '
+                        . "{$decoded['message']}"
+                        . "\n\n({$decoded['status']})"
+                    );
+            }
+
+        }
+
+        return $this->decodedResponse = $decoded;
+    }
 }
