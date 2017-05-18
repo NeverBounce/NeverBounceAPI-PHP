@@ -16,7 +16,7 @@ class Account extends ApiClient
      */
     public static function info()
     {
-        $obj = self::getInstance();
+        self::$lastInstance = $obj = new self();
         $resp = $obj->request('GET', 'account/info');
         return new ResponseObject($resp);
     }
