@@ -47,6 +47,11 @@ class ApiClient
     protected $rawResponse;
 
     /**
+     * @var array
+     */
+    protected $responseHeaders = [];
+
+    /**
      * @var
      */
     protected $statusCode = 0;
@@ -149,9 +154,7 @@ class ApiClient
     public function request($method, $endpoint, array $params = [])
     {
         // Set API key parameter
-//        if(strtoupper($method) !== 'PUT') {
-            $params['key'] = Auth::getApiKey();
-//        }
+        $params['key'] = Auth::getApiKey();
 
         // Encode parameters according to contentType
         $encodedParams = ($this->contentType === 'application/json') ? json_encode($params) : http_build_query($params);
@@ -159,9 +162,6 @@ class ApiClient
         // Base url + endpoint resolved
         $url = self::$baseUrl . $endpoint;
 
-        var_dump($this->contentType);
-        var_dump($encodedParams);
-//        exit;
         // If this is a GET request append query to the end of the url
         if(strtoupper($method) === 'GET') {
             $this->client->init($url . '?' . $encodedParams);
@@ -172,28 +172,6 @@ class ApiClient
             $this->client->setOpt(CURLOPT_CUSTOMREQUEST, 'POST');
         }
 
-//        switch(strtoupper($method)) {
-//
-//            case 'GET':
-//                $this->client->init($url . '?' . $encodedParams);
-//                break;
-//
-//            case 'PUT':
-//                $this->client->init($url . '?key=' . Auth::getApiKey());
-////                $this->client->setOpt(CURLOPT_POSTFIELDS, $encodedParams);
-//                if($file) {
-//                    $this->client->setOpt(CURLOPT_INFILE, $file);
-//                    $this->client->setOpt(CURLOPT_INFILESIZE, strlen($file));
-//                }
-//                break;
-//
-//            case 'POST':
-//            default:
-//                $this->client->init($url);
-//                $this->client->setOpt(CURLOPT_POSTFIELDS, $encodedParams);
-//        }
-//        $this->client->setOpt(CURLOPT_CUSTOMREQUEST, strtoupper($method));
-
         // Set options
         $this->client->setOpt(CURLOPT_HTTPHEADER, [
             'User-Agent: NeverBounce-PHPSdk/' . Utils::wrapperVersion(),
@@ -201,6 +179,15 @@ class ApiClient
         ]);
         $this->client->setOpt(CURLOPT_TIMEOUT, $this->timeout);
         $this->client->setOpt(CURLOPT_RETURNTRANSFER, true);
+        $this->client->setOpt(CURLOPT_HEADERFUNCTION, function ($curl, $header_line) {
+            // Ignore the HTTP request line (HTTP/1.1 200 OK)
+            if (strpos($header_line, ":") === false) {
+                return strlen($header_line);
+            }
+            list($key, $value) = explode(":", trim($header_line), 2);
+            $this->responseHeaders[trim($key)] = trim($value);
+            return strlen($header_line);
+        });
 
         $this->rawResponse = $this->client->execute();
 
@@ -215,7 +202,7 @@ class ApiClient
         // Get status code
         $this->statusCode = $this->client->getInfo(CURLINFO_HTTP_CODE);
         $this->client->close();
-        return $this->response($this->rawResponse, $this->statusCode);
+        return $this->response($this->rawResponse, $this->responseHeaders, $this->statusCode);
     }
 
     /**
@@ -261,67 +248,71 @@ class ApiClient
      * @throws HttpClientException
      * @throws ThrottleException
      */
-    protected function response($respBody, $respCode)
+    protected function response($respBody, $respHeaders, $respCode)
     {
-        $decoded = json_decode($respBody, true);
+        if($respHeaders['Content-Type'] === 'application/json') {
+            $decoded = json_decode($respBody, true);
 
-        // Check if the response was decoded properly
-        if ($decoded === null) {
-            throw new HttpClientException(
-                'The response from NeverBounce was unable '
-                . 'to be parsed as json. Try the request '
-                . 'again, if this error persists'
-                . ' let us know at support@neverbounce.com.'
-                . "\n\n(Internal error [status $respCode: $respBody)"
-            );
-        }
-
-        if ($decoded['status'] !== 'success') {
-
-            switch($decoded['status']) {
-
-                case 'auth_failure':
-                    throw new AuthException(
-                        'We were unable to authenticate your request. '
-                        . 'The following information was supplied: '
-                        . "{$decoded['message']}"
-                        . "\n\n(auth_failure)"
-                    );
-
-                case 'temp_unavail':
-                    throw new GeneralException(
-                        'We were unable to complete your request. '
-                        . 'The following information was supplied: '
-                        . "{$decoded['message']}"
-                        . "\n\n(temp_unavail)"
-                    );
-
-                case 'throttle_triggered':
-                    throw new ThrottleException(
-                        'We were unable to complete your request. '
-                        . 'The following information was supplied: '
-                        . "{$decoded['message']}"
-                        . "\n\n(throttle_triggered)"
-                    );
-
-                case 'bad_referrer':
-                    throw new BadReferrerException(
-                        'We were unable to complete your request. '
-                        . 'The following information was supplied: '
-                        . "{$decoded['message']}"
-                        . "\n\n(bad_referrer)"
-                    );
-
-                case 'general_failure':
-                default:
-                    throw new GeneralException(
-                        'We were unable to complete your request. '
-                        . 'The following information was supplied: '
-                        . "{$decoded['message']}"
-                        . "\n\n({$decoded['status']})"
-                    );
+            // Check if the response was decoded properly
+            if ($decoded === null) {
+                throw new HttpClientException(
+                    'The response from NeverBounce was unable '
+                    . 'to be parsed as json. Try the request '
+                    . 'again, if this error persists'
+                    . ' let us know at support@neverbounce.com.'
+                    . "\n\n(Internal error [status $respCode: $respBody)"
+                );
             }
 
+            if ($decoded['status'] !== 'success') {
+
+                switch ($decoded['status']) {
+
+                    case 'auth_failure':
+                        throw new AuthException(
+                            'We were unable to authenticate your request. '
+                            . 'The following information was supplied: '
+                            . "{$decoded['message']}"
+                            . "\n\n(auth_failure)"
+                        );
+
+                    case 'temp_unavail':
+                        throw new GeneralException(
+                            'We were unable to complete your request. '
+                            . 'The following information was supplied: '
+                            . "{$decoded['message']}"
+                            . "\n\n(temp_unavail)"
+                        );
+
+                    case 'throttle_triggered':
+                        throw new ThrottleException(
+                            'We were unable to complete your request. '
+                            . 'The following information was supplied: '
+                            . "{$decoded['message']}"
+                            . "\n\n(throttle_triggered)"
+                        );
+
+                    case 'bad_referrer':
+                        throw new BadReferrerException(
+                            'We were unable to complete your request. '
+                            . 'The following information was supplied: '
+                            . "{$decoded['message']}"
+                            . "\n\n(bad_referrer)"
+                        );
+
+                    case 'general_failure':
+                    default:
+                        throw new GeneralException(
+                            'We were unable to complete your request. '
+                            . 'The following information was supplied: '
+                            . "{$decoded['message']}"
+                            . "\n\n({$decoded['status']})"
+                        );
+                }
+
+            }
+        } else {
+            return $this->decodedResponse = $respBody;
         }
 
         return $this->decodedResponse = $decoded;

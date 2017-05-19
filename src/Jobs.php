@@ -162,7 +162,26 @@ class Jobs extends ApiClient
     public static function download($jobId, $query = [])
     {
         self::$lastInstance = $obj = new self();
-        $res = $obj->request('GEET', 'jobs/download', array_merge($query, [
+        $res = $obj->request('GET', 'jobs/download', array_merge($query, [
+            'job_id' => $jobId
+        ]));
+        return new ResponseObject($res);
+    }
+
+    /**
+     * @param $jobId
+     * @param array $query
+     * @return ResponseObject
+     * @throws \NeverBounce\Errors\ThrottleException
+     * @throws \NeverBounce\Errors\HttpClientException
+     * @throws \NeverBounce\Errors\GeneralException
+     * @throws \NeverBounce\Errors\BadReferrerException
+     * @throws \NeverBounce\Errors\AuthException
+     */
+    public static function results($jobId, $query = [])
+    {
+        self::$lastInstance = $obj = new self();
+        $res = $obj->request('GET', 'jobs/get_results', array_merge($query, [
             'job_id' => $jobId
         ]));
         return new ResponseObject($res);

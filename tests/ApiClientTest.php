@@ -75,7 +75,12 @@ class ApiClientTest extends TestCase
               "execution_time": 1419
             }');
         $mock->method('getInfo')->willReturn(200);
+        $reflector = new \ReflectionClass(ApiClient::class);
+        $property = $reflector->getProperty('responseHeaders');
+        $property->setAccessible(true);
+
         $client = new ApiClient($mock);
+        $property->setValue($client, $this->generateHeaders());
         $res = $client->request('GET', '/account/info');
 
         $this->assertArrayHasKey('status', $res);
@@ -106,7 +111,7 @@ class ApiClientTest extends TestCase
         $json = '{"status": "success","result": "valid","flags": ["has_dns","has_dns_mx"],"suggested_correction": "","retry_token": "","execution_time": 499}';
         $client = new ApiClient($this->getMockHttpClient());
         $this->assertEquals(json_decode($json, true),
-            $method->invoke($client, $json, 200));
+            $method->invoke($client, $json, $this->generateHeaders(), 200));
     }
 
     public function testGeneralFailure()
@@ -118,7 +123,7 @@ class ApiClientTest extends TestCase
         $json = '{"status": "general_failure","message": "Something went wrong","execution_time": 96}';
         $client = new ApiClient($this->getMockHttpClient());
         $this->setExpectedException(GeneralException::class);
-        $method->invoke($client, $json, 200);
+        $method->invoke($client, $json, $this->generateHeaders(), 200);
     }
 
     public function testBadResponse()
@@ -130,7 +135,7 @@ class ApiClientTest extends TestCase
         $json = "NOT JSON!!";
         $client = new ApiClient($this->getMockHttpClient());
         $this->setExpectedException(GeneralException::class);
-        $method->invoke($client, $json, 200);
+        $method->invoke($client, $json, $this->generateHeaders(), 200);
     }
 
     public function testAuthFailure()
@@ -142,7 +147,7 @@ class ApiClientTest extends TestCase
         $json = '{"status": "auth_failure","message": "Invalid API key \'adsfad\'","execution_time": 96}';
         $client = new ApiClient($this->getMockHttpClient());
         $this->setExpectedException(AuthException::class);
-        $method->invoke($client, $json, 200);
+        $method->invoke($client, $json, $this->generateHeaders(), 200);
     }
 
     public function testTempUnavail()
@@ -154,7 +159,7 @@ class ApiClientTest extends TestCase
         $json = '{"status": "temp_unavail","message": "Unable to communicate with backend services","execution_time": 96}';
         $client = new ApiClient($this->getMockHttpClient());
         $this->setExpectedException(GeneralException::class);
-        $method->invoke($client, $json, 200);
+        $method->invoke($client, $json, $this->generateHeaders(), 200);
     }
 
     public function testThrottleTriggered()
@@ -166,7 +171,7 @@ class ApiClientTest extends TestCase
         $json = '{"status": "throttle_triggered","message": "Too many requests in a short amount of time","execution_time": 96}';
         $client = new ApiClient($this->getMockHttpClient());
         $this->setExpectedException(GeneralException::class);
-        $method->invoke($client, $json, 200);
+        $method->invoke($client, $json, $this->generateHeaders(), 200);
     }
 
     public function testBadReferrer()
@@ -178,6 +183,6 @@ class ApiClientTest extends TestCase
         $json = '{"status": "bad_referrer","message": "The referrer this request originated from is not on the trusted list","execution_time": 96}';
         $client = new ApiClient($this->getMockHttpClient());
         $this->setExpectedException(BadReferrerException::class);
-        $method->invoke($client, $json, 200);
+        $method->invoke($client, $json, $this->generateHeaders(), 200);
     }
 }
