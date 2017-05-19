@@ -6,6 +6,7 @@ class Single extends ApiClient
 {
     /**
      * @param $email
+     * @param int $maxexecution
      * @return SingleVerification
      * @throws \NeverBounce\Errors\ThrottleException
      * @throws \NeverBounce\Errors\HttpClientException
@@ -13,18 +14,20 @@ class Single extends ApiClient
      * @throws \NeverBounce\Errors\BadReferrerException
      * @throws \NeverBounce\Errors\AuthException
      */
-    public static function verify($email)
+    public static function verify($email, $maxexecution = 60)
     {
         self::$lastInstance = $obj = new self();
         $res = $obj->request('GET', 'single/check', [
             'email' => $email,
+            'max_execution_time' => $maxexecution,
             'credits_info' => true,
         ]);
         return new SingleVerification($email, $res);
     }
 
     /**
-     * @param $email
+     * @param string $email
+     * @param int $maxexecution
      * @return SingleVerification
      * @throws \NeverBounce\Errors\ThrottleException
      * @throws \NeverBounce\Errors\HttpClientException
@@ -32,11 +35,12 @@ class Single extends ApiClient
      * @throws \NeverBounce\Errors\BadReferrerException
      * @throws \NeverBounce\Errors\AuthException
      */
-    public static function verifyWithAddressInformation($email)
+    public static function verifyWithAddressInformation($email, $maxexecution = 60)
     {
         self::$lastInstance = $obj = new self();
         $res = $obj->request('GET', 'single/check', [
             'email' => $email,
+            'max_execution_time' => $maxexecution,
             'credits_info' => true,
             'address_info' => true,
         ]);
