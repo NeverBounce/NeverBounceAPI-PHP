@@ -84,6 +84,14 @@ class ApiClient
     }
 
     /**
+     * @return ApiClient
+     */
+    static public function getLastRequest()
+    {
+        return self::$lastInstance;
+    }
+
+    /**
      * @param integer $timeout Sets the maximum number of seconds to allow the
      *     request to execute.
      * @return $this
