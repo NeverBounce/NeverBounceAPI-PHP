@@ -65,7 +65,7 @@ class Jobs extends ApiClient
     }
 
     /**
-     * @param $json
+     * @param $array
      * @param $filename
      * @param bool $autoparse
      * @param bool $autorun
@@ -76,12 +76,13 @@ class Jobs extends ApiClient
      * @throws \NeverBounce\Errors\BadReferrerException
      * @throws \NeverBounce\Errors\AuthException
      */
-    public static function createFromJson($json, $filename, $autoparse = true, $autorun = true)
+    public static function createFromArray($array, $filename, $autoparse = true, $autorun = true)
     {
         self::$lastInstance = $obj = new self();
+        $obj->setContentType('application/json');
         $res = $obj->request('POST', 'jobs/create', [
-            'input_location' => 'json',
-            'input' => $json,
+            'input_location' => 'supplied',
+            'input' => $array,
             'filename' => $filename,
             'auto_run' => (integer) $autorun,
             'auto_parse' => (integer) $autoparse,
@@ -90,7 +91,7 @@ class Jobs extends ApiClient
     }
 
     /**
-     * @param $string
+     * @param $filehandler
      * @param $filename
      * @param bool $autoparse
      * @param bool $autorun
@@ -101,19 +102,12 @@ class Jobs extends ApiClient
      * @throws \NeverBounce\Errors\BadReferrerException
      * @throws \NeverBounce\Errors\AuthException
      */
-    public static function createFromString($string, $filename, $autoparse = true, $autorun = true)
-    {
-        self::$lastInstance = $obj = new self();
-        $obj->setContentType('application/json');
-        $res = $obj->request('POST', 'jobs/create', [
-            'input_location' => 'supplied',
-            'input' => $string,
-            'filename' => $filename,
-            'auto_run' => (integer) $autorun,
-            'auto_parse' => (integer) $autoparse,
-        ]);
-        return new ResponseObject($res);
-    }
+//    public static function createFromFile($filehandler, $filename, $autoparse = true, $autorun = true)
+//    {
+//        self::$lastInstance = $obj = new self();
+//        $res = $obj->request('PUT', 'jobs/create', [], $filehandler);
+//        return new ResponseObject($res);
+//    }
 
     /**
      * @param $jobId

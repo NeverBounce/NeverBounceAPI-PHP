@@ -149,7 +149,9 @@ class ApiClient
     public function request($method, $endpoint, array $params = [])
     {
         // Set API key parameter
-        $params['key'] = Auth::getApiKey();
+//        if(strtoupper($method) !== 'PUT') {
+            $params['key'] = Auth::getApiKey();
+//        }
 
         // Encode parameters according to contentType
         $encodedParams = ($this->contentType === 'application/json') ? json_encode($params) : http_build_query($params);
@@ -157,8 +159,9 @@ class ApiClient
         // Base url + endpoint resolved
         $url = self::$baseUrl . $endpoint;
 
-//        var_dump($this->contentType);
-//        var_dump($encodedParams);
+        var_dump($this->contentType);
+        var_dump($encodedParams);
+//        exit;
         // If this is a GET request append query to the end of the url
         if(strtoupper($method) === 'GET') {
             $this->client->init($url . '?' . $encodedParams);
@@ -168,6 +171,28 @@ class ApiClient
             $this->client->setOpt(CURLOPT_POSTFIELDS, $encodedParams);
             $this->client->setOpt(CURLOPT_CUSTOMREQUEST, 'POST');
         }
+
+//        switch(strtoupper($method)) {
+//
+//            case 'GET':
+//                $this->client->init($url . '?' . $encodedParams);
+//                break;
+//
+//            case 'PUT':
+//                $this->client->init($url . '?key=' . Auth::getApiKey());
+////                $this->client->setOpt(CURLOPT_POSTFIELDS, $encodedParams);
+//                if($file) {
+//                    $this->client->setOpt(CURLOPT_INFILE, $file);
+//                    $this->client->setOpt(CURLOPT_INFILESIZE, strlen($file));
+//                }
+//                break;
+//
+//            case 'POST':
+//            default:
+//                $this->client->init($url);
+//                $this->client->setOpt(CURLOPT_POSTFIELDS, $encodedParams);
+//        }
+//        $this->client->setOpt(CURLOPT_CUSTOMREQUEST, strtoupper($method));
 
         // Set options
         $this->client->setOpt(CURLOPT_HTTPHEADER, [
