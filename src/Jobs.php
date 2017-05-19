@@ -41,6 +41,7 @@ class Jobs extends ApiClient
 
     /**
      * @param $url
+     * @param bool $runsample
      * @param bool $autoparse
      * @param bool $autorun
      * @return ResponseObject
@@ -50,7 +51,7 @@ class Jobs extends ApiClient
      * @throws \NeverBounce\Errors\BadReferrerException
      * @throws \NeverBounce\Errors\AuthException
      */
-    public static function createFromUrl($url, $filename, $autoparse = true, $autorun = true)
+    public static function createFromUrl($url, $filename, $runsample = false, $autoparse = true, $autorun = true)
     {
         self::$lastInstance = $obj = new self();
         $obj->setContentType('application/json');
@@ -58,6 +59,7 @@ class Jobs extends ApiClient
             'input_location' => 'remote_url',
             'input' => $url,
             'filename' => $filename,
+            'run_sample' => (integer) $runsample,
             'auto_run' => (integer) $autorun,
             'auto_parse' => (integer) $autoparse,
         ]);
@@ -67,6 +69,7 @@ class Jobs extends ApiClient
     /**
      * @param $array
      * @param $filename
+     * @param bool $runsample
      * @param bool $autoparse
      * @param bool $autorun
      * @return ResponseObject
@@ -76,7 +79,7 @@ class Jobs extends ApiClient
      * @throws \NeverBounce\Errors\BadReferrerException
      * @throws \NeverBounce\Errors\AuthException
      */
-    public static function createFromArray($array, $filename, $autoparse = true, $autorun = true)
+    public static function createFromArray($array, $filename, $runsample = false, $autoparse = true, $autorun = true)
     {
         self::$lastInstance = $obj = new self();
         $obj->setContentType('application/json');
@@ -84,6 +87,7 @@ class Jobs extends ApiClient
             'input_location' => 'supplied',
             'input' => $array,
             'filename' => $filename,
+            'run_sample' => (integer) $runsample,
             'auto_run' => (integer) $autorun,
             'auto_parse' => (integer) $autoparse,
         ]);

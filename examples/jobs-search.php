@@ -19,4 +19,4 @@ $jobs = \NeverBounce\Jobs::search([
 //    'items_per_page' => 10, // Number of items per page
 ]);
 
-var_dump($jobs);
+var_dump($jobs->total_pages);
