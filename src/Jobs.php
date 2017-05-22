@@ -43,7 +43,7 @@ class Jobs extends ApiClient
      * @param $url
      * @param bool $runsample
      * @param bool $autoparse
-     * @param bool $autorun
+     * @param bool $autostart
      * @return ResponseObject
      * @throws \NeverBounce\Errors\ThrottleException
      * @throws \NeverBounce\Errors\HttpClientException
@@ -51,7 +51,7 @@ class Jobs extends ApiClient
      * @throws \NeverBounce\Errors\BadReferrerException
      * @throws \NeverBounce\Errors\AuthException
      */
-    public static function createFromUrl($url, $filename, $runsample = false, $autoparse = true, $autorun = true)
+    public static function createFromUrl($url, $filename, $runsample = false, $autoparse = true, $autostart = true)
     {
         self::$lastInstance = $obj = new self();
         $obj->setContentType('application/json');
@@ -60,7 +60,7 @@ class Jobs extends ApiClient
             'input' => $url,
             'filename' => $filename,
             'run_sample' => (integer) $runsample,
-            'auto_run' => (integer) $autorun,
+            'auto_start' => (integer) $autostart,
             'auto_parse' => (integer) $autoparse,
         ]);
         return new ResponseObject($res);
@@ -71,7 +71,7 @@ class Jobs extends ApiClient
      * @param $filename
      * @param bool $runsample
      * @param bool $autoparse
-     * @param bool $autorun
+     * @param bool $autostart
      * @return ResponseObject
      * @throws \NeverBounce\Errors\ThrottleException
      * @throws \NeverBounce\Errors\HttpClientException
@@ -79,7 +79,7 @@ class Jobs extends ApiClient
      * @throws \NeverBounce\Errors\BadReferrerException
      * @throws \NeverBounce\Errors\AuthException
      */
-    public static function createFromArray($array, $filename, $runsample = false, $autoparse = true, $autorun = true)
+    public static function createFromArray($array, $filename, $runsample = false, $autoparse = true, $autostart = true)
     {
         self::$lastInstance = $obj = new self();
         $obj->setContentType('application/json');
@@ -88,7 +88,7 @@ class Jobs extends ApiClient
             'input' => $array,
             'filename' => $filename,
             'run_sample' => (integer) $runsample,
-            'auto_run' => (integer) $autorun,
+            'auto_start' => (integer) $autostart,
             'auto_parse' => (integer) $autoparse,
         ]);
         return new ResponseObject($res);
@@ -98,7 +98,7 @@ class Jobs extends ApiClient
      * @param $filehandler
      * @param $filename
      * @param bool $autoparse
-     * @param bool $autorun
+     * @param bool $autostart
      * @return ResponseObject
      * @throws \NeverBounce\Errors\ThrottleException
      * @throws \NeverBounce\Errors\HttpClientException
@@ -106,7 +106,7 @@ class Jobs extends ApiClient
      * @throws \NeverBounce\Errors\BadReferrerException
      * @throws \NeverBounce\Errors\AuthException
      */
-//    public static function createFromFile($filehandler, $filename, $autoparse = true, $autorun = true)
+//    public static function createFromFile($filehandler, $filename, $autoparse = true, $autostart = true)
 //    {
 //        self::$lastInstance = $obj = new self();
 //        $res = $obj->request('PUT', 'jobs/create', [], $filehandler);
