@@ -27,7 +27,7 @@ fwrite(STDOUT, 'Is free mail: ' . (string) $verifiation->hasFlag('free_email_hos
 fwrite(STDOUT, 'Suggested Correction: ' . $verifiation->suggested_correction . PHP_EOL);
 
 // Check if email is valid
-fwrite(STDOUT, 'Is valid: ' . (string) $verifiation->is('unknown') . PHP_EOL);
+fwrite(STDOUT, 'Is unknown: ' . (string) $verifiation->is('unknown') . PHP_EOL);
 
 // Get numeric verification result
 fwrite(STDOUT, 'Isn\'t valid or catchall: ' . (string) $verifiation->not(['valid', 'catchall']) . PHP_EOL);

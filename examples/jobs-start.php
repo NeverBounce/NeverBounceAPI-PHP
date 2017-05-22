@@ -22,6 +22,13 @@ $json = [
 ];
 
 // Get status from specific job
-$job = \NeverBounce\Jobs::createFromArray($json, 'Created from Array.csv');
+$job = \NeverBounce\Jobs::createFromArray($json, 'Created from Array', false, true, false);
+
+$job_id = $job->job_id;
+
+// Sleep is just for demonstration
+sleep(15);
+
+$job = \NeverBounce\Jobs::start($job_id);
 
 var_dump($job);
