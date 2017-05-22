@@ -258,6 +258,7 @@ class ApiClient
      */
     protected function response($respBody, $respHeaders, $respCode)
     {
+        // Handle response based on Content-Type
         if($respHeaders['Content-Type'] === 'application/json') {
             $decoded = json_decode($respBody, true);
 
@@ -268,10 +269,24 @@ class ApiClient
                     . 'to be parsed as json. Try the request '
                     . 'again, if this error persists'
                     . ' let us know at support@neverbounce.com.'
-                    . "\n\n(Internal error [status $respCode: $respBody)"
+                    . "\n\n(Internal error [status $respCode: $respBody])"
                 );
             }
 
+            // Check for missing status and error messages
+            if(!isset($decoded['status']) || ($decoded['status'] !== 'success' && !isset($decoded['message']))) {
+                throw new HttpClientException(
+                    'The response from server is incomplete. '
+                    . 'Either a status code was not included or '
+                    . 'the an error was returned without an error '
+                    . 'message. Try the request again, if '
+                    . 'this error persists let us know at'
+                    . ' support@neverbounce.com.'
+                    . "\n\n(Internal error [status $respCode: $respBody])"
+                );
+            }
+
+            // Handle other non success statuses
             if ($decoded['status'] !== 'success') {
 
                 switch ($decoded['status']) {
@@ -317,12 +332,11 @@ class ApiClient
                             . "\n\n({$decoded['status']})"
                         );
                 }
-
             }
-        } else {
-            return $this->decodedResponse = $respBody;
+
+            return $this->decodedResponse = $decoded;
         }
 
-        return $this->decodedResponse = $decoded;
+        return $this->decodedResponse = $respBody;
     }
 }
