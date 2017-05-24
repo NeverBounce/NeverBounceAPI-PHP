@@ -16,6 +16,11 @@ class ApiClient
     static protected $lastInstance;
 
     /**
+     * @var bool
+     */
+    static protected $debug = false;
+
+    /**
      * @var ClientInterface
      */
     protected $client;
@@ -89,6 +94,14 @@ class ApiClient
     static public function getLastRequest()
     {
         return self::$lastInstance;
+    }
+
+    /**
+     * @param enables debug mode (dumps out encoded params and response)
+     */
+    static public function debug()
+    {
+        self::$debug = true;
     }
 
     /**
@@ -167,6 +180,10 @@ class ApiClient
         // Encode parameters according to contentType
         $encodedParams = ($this->contentType === 'application/json') ? json_encode($params) : http_build_query($params);
 
+        if(self::$debug) {
+            var_dump($encodedParams);
+        }
+
         // Base url + endpoint resolved
         $url = self::$baseUrl . $endpoint;
 
@@ -198,6 +215,10 @@ class ApiClient
         });
 
         $this->rawResponse = $this->client->execute();
+
+        if(self::$debug) {
+            var_dump($this->rawResponse);
+        }
 
         // Catches curl errors
         if ($this->rawResponse === false) {
