@@ -82,10 +82,6 @@ class NB_Single
      */
     public function verify($email, $timeout = null)
     {
-        // Sanitize aliases; http_build_query does not encode (+) and
-        // x-www-urlencode-form treats these as spaces
-        $email = str_replace('+', '%2B', $email);
-
         $params = [
             'email' => $email
         ];
