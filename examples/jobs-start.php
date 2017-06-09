@@ -26,9 +26,19 @@ $job = \NeverBounce\Jobs::createFromArray($json, 'Created from Array', false, tr
 
 $job_id = $job->job_id;
 
-// Sleep is just for demonstration
-sleep(15);
+sleep(3);
+$status = \NeverBounce\Jobs::status($job_id);
+fwrite(STDOUT, $status->job_status . PHP_EOL);
 
+while($status->job_status !== 'waiting') {
+    sleep(3);
+
+    $status = \NeverBounce\Jobs::status($job_id);
+    fwrite(STDOUT, $status->job_status . PHP_EOL);
+
+}
+
+sleep(5);
 $job = \NeverBounce\Jobs::start($job_id);
 
 var_dump($job);
