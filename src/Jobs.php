@@ -182,12 +182,12 @@ class Jobs extends ApiClient
      * @throws \NeverBounce\Errors\BadReferrerException
      * @throws \NeverBounce\Errors\AuthException
      */
-//    public static function results($jobId, $query = [])
-//    {
-//        self::$lastInstance = $obj = new self();
-//        $res = $obj->request('GET', 'jobs/get_results', array_merge($query, [
-//            'job_id' => $jobId
-//        ]));
-//        return new ResponseObject($res);
-//    }
+    public static function results($jobId, $query = [])
+    {
+        self::$lastInstance = $obj = new self();
+        $res = $obj->request('GET', 'jobs/results', array_merge($query, [
+            'job_id' => $jobId
+        ]));
+        return new ResponseObject($res);
+    }
 }
