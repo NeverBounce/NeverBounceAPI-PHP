@@ -1,6 +1,7 @@
 <?php namespace NeverBounce;
 
 use NeverBounce\Object\ResponseObject;
+use NeverBounce\Object\VerificationObject;
 
 class Jobs extends ApiClient
 {
@@ -188,6 +189,11 @@ class Jobs extends ApiClient
         $res = $obj->request('GET', 'jobs/results', array_merge($query, [
             'job_id' => $jobId
         ]));
+
+        // Wrap verification results with teh VerificationObject
+        foreach($res['results'] as $key => $value) {
+            $res['results'][$key]['verification'] = new VerificationObject($value['data']['email'], $value['verification']);
+        }
         return new ResponseObject($res);
     }
 }
