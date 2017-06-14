@@ -146,7 +146,7 @@ class Jobs extends ApiClient
     public static function start($jobId, $runsample = false)
     {
         self::$lastInstance = $obj = new self();
-        $res = $obj->request('POST', 'jobs/parse', [
+        $res = $obj->request('POST', 'jobs/start', [
             'job_id' => $jobId,
             'run_sample' => $runsample,
         ]);
