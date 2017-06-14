@@ -1,13 +1,13 @@
 <?php namespace NeverBounce;
 
-use NeverBounce\Object\SingleVerification;
+use NeverBounce\Object\VerificationObject;
 
 class Single extends ApiClient
 {
     /**
      * @param $email
      * @param int $maxexecution
-     * @return SingleVerification
+     * @return VerificationObject
      * @throws \NeverBounce\Errors\ThrottleException
      * @throws \NeverBounce\Errors\HttpClientException
      * @throws \NeverBounce\Errors\GeneralException
@@ -22,13 +22,13 @@ class Single extends ApiClient
             'max_execution_time' => $maxexecution,
             'credits_info' => true,
         ]);
-        return new SingleVerification($email, $res);
+        return new VerificationObject($email, $res);
     }
 
     /**
      * @param string $email
      * @param int $maxexecution
-     * @return SingleVerification
+     * @return VerificationObject
      * @throws \NeverBounce\Errors\ThrottleException
      * @throws \NeverBounce\Errors\HttpClientException
      * @throws \NeverBounce\Errors\GeneralException
@@ -44,6 +44,6 @@ class Single extends ApiClient
             'credits_info' => true,
             'address_info' => true,
         ]);
-        return new SingleVerification($email, $res);
+        return new VerificationObject($email, $res);
     }
 }

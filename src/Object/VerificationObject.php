@@ -1,6 +1,6 @@
 <?php namespace NeverBounce\Object;
 
-class SingleVerification extends ResponseObject
+class VerificationObject extends ResponseObject
 {
 
     const GOOD = 0; // Alias of valid

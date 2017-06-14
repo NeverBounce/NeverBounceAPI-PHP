@@ -1,12 +1,12 @@
 <?php namespace NeverBounce;
 
-use NeverBounce\Object\SingleVerification;
+use NeverBounce\Object\VerificationObject;
 
-class SingleVerificationTest extends \PHPUnit_Framework_TestCase
+class VerificationObjectTest extends \PHPUnit_Framework_TestCase
 {
     public function testSingleVerification()
     {
-        $verify = new SingleVerification('valid@neverbounce.com', [
+        $verify = new VerificationObject('valid@neverbounce.com', [
             'result' => 'valid',
             'flags' => [],
             'suggested_correction' => '',
@@ -14,7 +14,7 @@ class SingleVerificationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('valid', $verify->result);
         $this->assertEquals(0, $verify->result_integer);
 
-        $verify = new SingleVerification('invalid@neverbounce.com', [
+        $verify = new VerificationObject('invalid@neverbounce.com', [
             'result' => 'invalid',
             'flags' => [],
             'suggested_correction' => '',
@@ -22,7 +22,7 @@ class SingleVerificationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('invalid', $verify->result);
         $this->assertEquals(1, $verify->result_integer);
 
-        $verify = new SingleVerification('disposable@neverbounce.com', [
+        $verify = new VerificationObject('disposable@neverbounce.com', [
             'result' => 'disposable',
             'flags' => [],
             'suggested_correction' => '',
@@ -30,7 +30,7 @@ class SingleVerificationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('disposable', $verify->result);
         $this->assertEquals(2, $verify->result_integer);
 
-        $verify = new SingleVerification('catchall@neverbounce.com', [
+        $verify = new VerificationObject('catchall@neverbounce.com', [
             'result' => 'catchall',
             'flags' => [],
             'suggested_correction' => '',
@@ -38,7 +38,7 @@ class SingleVerificationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('catchall', $verify->result);
         $this->assertEquals(3, $verify->result_integer);
 
-        $verify = new SingleVerification('unknown@neverbounce.com', [
+        $verify = new VerificationObject('unknown@neverbounce.com', [
             'result' => 'unknown',
             'flags' => [],
             'suggested_correction' => '',
@@ -49,7 +49,7 @@ class SingleVerificationTest extends \PHPUnit_Framework_TestCase
 
     public function testFlags()
     {
-        $verification = new SingleVerification('valid@neverbounce.com', [
+        $verification = new VerificationObject('valid@neverbounce.com', [
             'result' => 'valid',
             'flags' => ['bad_syntax'],
             'suggested_correction' => '',
@@ -62,7 +62,7 @@ class SingleVerificationTest extends \PHPUnit_Framework_TestCase
 
     public function testSuggestedCorrection()
     {
-        $verification = new SingleVerification('valid@gmal.com', [
+        $verification = new VerificationObject('valid@gmal.com', [
             'result' => 'valid',
             'flags' => [],
             'suggested_correction' => 'valid@gmail.com',
@@ -74,51 +74,51 @@ class SingleVerificationTest extends \PHPUnit_Framework_TestCase
 
     public function testIs()
     {
-        $valid = new SingleVerification('valid@neverbounce.com', [
+        $valid = new VerificationObject('valid@neverbounce.com', [
             'result' => 'valid',
             'flags' => [],
             'suggested_correction' => '',
         ]);
 
-        $this->assertTrue(true, $valid->is(SingleVerification::VALID));
+        $this->assertTrue(true, $valid->is(VerificationObject::VALID));
         $this->assertTrue(true, $valid->is('valid'));
         $this->assertTrue(true, $valid->is(0));
-        $this->assertFalse($valid->is(SingleVerification::INVALID));
-        $this->assertFalse($valid->is(SingleVerification::DISPOSABLE));
-        $this->assertFalse($valid->is(SingleVerification::CATCHALL));
-        $this->assertFalse($valid->is(SingleVerification::UNKNOWN));
+        $this->assertFalse($valid->is(VerificationObject::INVALID));
+        $this->assertFalse($valid->is(VerificationObject::DISPOSABLE));
+        $this->assertFalse($valid->is(VerificationObject::CATCHALL));
+        $this->assertFalse($valid->is(VerificationObject::UNKNOWN));
 
-        $this->assertTrue(true, $valid->is([SingleVerification::VALID]));
+        $this->assertTrue(true, $valid->is([VerificationObject::VALID]));
         $this->assertFalse($valid->is([
-            SingleVerification::INVALID,
-            SingleVerification::CATCHALL,
-            SingleVerification::UNKNOWN,
-            SingleVerification::DISPOSABLE,
+            VerificationObject::INVALID,
+            VerificationObject::CATCHALL,
+            VerificationObject::UNKNOWN,
+            VerificationObject::DISPOSABLE,
         ]));
     }
 
     public function testNot()
     {
-        $valid = new SingleVerification('valid@neverbounce.com', [
+        $valid = new VerificationObject('valid@neverbounce.com', [
             'result' => 'valid',
             'flags' => [],
             'suggested_correction' => '',
         ]);
 
-        $this->assertTrue(true, $valid->not(SingleVerification::INVALID));
+        $this->assertTrue(true, $valid->not(VerificationObject::INVALID));
         $this->assertTrue(true, $valid->not(1));
         $this->assertTrue(true, $valid->not('invalid'));
-        $this->assertTrue(true, $valid->not(SingleVerification::DISPOSABLE));
-        $this->assertTrue(true, $valid->not(SingleVerification::CATCHALL));
-        $this->assertTrue(true, $valid->not(SingleVerification::UNKNOWN));
-        $this->assertFalse($valid->not(SingleVerification::VALID));
+        $this->assertTrue(true, $valid->not(VerificationObject::DISPOSABLE));
+        $this->assertTrue(true, $valid->not(VerificationObject::CATCHALL));
+        $this->assertTrue(true, $valid->not(VerificationObject::UNKNOWN));
+        $this->assertFalse($valid->not(VerificationObject::VALID));
 
         $this->assertTrue(true, $valid->not([
-            SingleVerification::INVALID,
-            SingleVerification::CATCHALL,
-            SingleVerification::UNKNOWN,
-            SingleVerification::DISPOSABLE,
+            VerificationObject::INVALID,
+            VerificationObject::CATCHALL,
+            VerificationObject::UNKNOWN,
+            VerificationObject::DISPOSABLE,
         ]));
-        $this->assertFalse($valid->not([SingleVerification::VALID]));
+        $this->assertFalse($valid->not([VerificationObject::VALID]));
     }
 }
