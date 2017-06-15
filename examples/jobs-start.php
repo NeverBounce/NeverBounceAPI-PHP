@@ -23,22 +23,22 @@ $json = [
 
 // Get status from specific job
 $job = \NeverBounce\Jobs::createFromArray($json, 'Created from Array', false, true, false);
-
 $job_id = $job->job_id;
 
-sleep(3);
+// Check status
 $status = \NeverBounce\Jobs::status($job_id);
 fwrite(STDOUT, $status->job_status . PHP_EOL);
 
+// Wait until job_status is set to waiting
 while($status->job_status !== 'waiting') {
-    sleep(3);
 
+    // Wait a few seconds before querying again
+    sleep(3);
     $status = \NeverBounce\Jobs::status($job_id);
     fwrite(STDOUT, $status->job_status . PHP_EOL);
-
 }
 
-sleep(5);
+// Start Job
 $job = \NeverBounce\Jobs::start($job_id);
 
 var_dump($job);
