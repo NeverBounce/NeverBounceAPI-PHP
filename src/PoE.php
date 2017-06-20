@@ -6,6 +6,7 @@ class PoE extends ApiClient
 {
     /**
      * @param $email
+     * @param $result
      * @param $confirmationToken
      * @param $transactionId
      * @return ResponseObject
@@ -15,11 +16,12 @@ class PoE extends ApiClient
      * @throws \NeverBounce\Errors\BadReferrerException
      * @throws \NeverBounce\Errors\AuthException
      */
-    public static function confirm($email, $confirmationToken, $transactionId)
+    public static function confirm($email, $result, $confirmationToken, $transactionId)
     {
         self::$lastInstance = $obj = new self();
         $res = $obj->request('POST', 'poe/confirm', [
             'email' => $email,
+            'result' => $result,
             'confirmation_token' => $confirmationToken,
             'transaction_id' => $transactionId,
         ]);
