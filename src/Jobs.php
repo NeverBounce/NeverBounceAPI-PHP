@@ -52,7 +52,7 @@ class Jobs extends ApiClient
      * @throws \NeverBounce\Errors\BadReferrerException
      * @throws \NeverBounce\Errors\AuthException
      */
-    public static function createFromUrl($url, $filename, $runsample = false, $autoparse = true, $autostart = true)
+    public static function createFromUrl($url, $filename, $runsample = null, $autoparse = null, $autostart = null)
     {
         self::$lastInstance = $obj = new self();
         $obj->setContentType('application/json');
@@ -60,9 +60,9 @@ class Jobs extends ApiClient
             'input_location' => 'remote_url',
             'input' => $url,
             'filename' => $filename,
-            'run_sample' => (integer) $runsample,
-            'auto_start' => (integer) $autostart,
-            'auto_parse' => (integer) $autoparse,
+            'run_sample' => $runsample,
+            'auto_start' => $autostart,
+            'auto_parse' => $autoparse,
         ]);
         return new ResponseObject($res);
     }
@@ -80,7 +80,7 @@ class Jobs extends ApiClient
      * @throws \NeverBounce\Errors\BadReferrerException
      * @throws \NeverBounce\Errors\AuthException
      */
-    public static function createFromArray($array, $filename, $runsample = false, $autoparse = true, $autostart = true)
+    public static function createFromArray($array, $filename, $runsample = null, $autoparse = null, $autostart = null)
     {
         self::$lastInstance = $obj = new self();
         $obj->setContentType('application/json');
@@ -88,9 +88,9 @@ class Jobs extends ApiClient
             'input_location' => 'supplied',
             'input' => $array,
             'filename' => $filename,
-            'run_sample' => (integer) $runsample,
-            'auto_start' => (integer) $autostart,
-            'auto_parse' => (integer) $autoparse,
+            'run_sample' => $runsample,
+            'auto_start' => $autostart,
+            'auto_parse' => $autoparse,
         ]);
         return new ResponseObject($res);
     }
@@ -124,7 +124,7 @@ class Jobs extends ApiClient
      * @throws \NeverBounce\Errors\BadReferrerException
      * @throws \NeverBounce\Errors\AuthException
      */
-    public static function parse($jobId, $autostart = false)
+    public static function parse($jobId, $autostart = null)
     {
         self::$lastInstance = $obj = new self();
         $res = $obj->request('POST', 'jobs/parse', [
@@ -144,7 +144,7 @@ class Jobs extends ApiClient
      * @throws \NeverBounce\Errors\BadReferrerException
      * @throws \NeverBounce\Errors\AuthException
      */
-    public static function start($jobId, $runsample = false)
+    public static function start($jobId, $runsample = null)
     {
         self::$lastInstance = $obj = new self();
         $res = $obj->request('POST', 'jobs/start', [
