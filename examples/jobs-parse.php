@@ -8,16 +8,14 @@ require_once __DIR__ . '/bootstrap.php';
 // Build json
 $json = [
     [
-        'mike@neverbounce.com',
-        'mike',
+        'id' => '12345',
+        'email' => 'support@neverbounce.com',
+        'name' => 'Fred McValid'
     ],
     [
-        'support@neverbounce.com',
-        'support'
-    ],
-    [
-        'invalid@neverbounce.com',
-        'invalid'
+        'id' => '12346',
+        'email' => 'invalid@neverbounce.com',
+        'name' => 'Bob McInvalid'
     ]
 ];
 
