@@ -20,6 +20,6 @@ $json = [
 ];
 
 // Get status from specific job
-$job = \NeverBounce\Jobs::createFromArray($json, 'Created from Array.csv', false, true, true);
+$job = \NeverBounce\Jobs::create($json,\NeverBounce\Jobs::SUPPLIED_INPUT, 'Created from Array.csv', false, true, true);
 
 var_dump($job);

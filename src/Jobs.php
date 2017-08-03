@@ -5,6 +5,9 @@ use NeverBounce\Object\VerificationObject;
 
 class Jobs extends ApiClient
 {
+    const REMOTE_INPUT = 'remote_url';
+    const SUPPLIED_INPUT = 'supplied';
+
     /**
      * @param array $query
      * @return ResponseObject
@@ -52,13 +55,13 @@ class Jobs extends ApiClient
      * @throws \NeverBounce\Errors\BadReferrerException
      * @throws \NeverBounce\Errors\AuthException
      */
-    public static function createFromUrl($url, $filename, $runsample = null, $autoparse = null, $autostart = null)
+    public static function create($input, $inputlocation, $filename, $runsample = null, $autoparse = null, $autostart = null)
     {
         self::$lastInstance = $obj = new self();
         $obj->setContentType('application/json');
         $res = $obj->request('POST', 'jobs/create', [
-            'input_location' => 'remote_url',
-            'input' => $url,
+            'input_location' => $inputlocation,
+            'input' => $input,
             'filename' => $filename,
             'run_sample' => $runsample,
             'auto_start' => $autostart,
@@ -66,53 +69,6 @@ class Jobs extends ApiClient
         ]);
         return new ResponseObject($res);
     }
-
-    /**
-     * @param $array
-     * @param $filename
-     * @param bool $runsample
-     * @param bool $autoparse
-     * @param bool $autostart
-     * @return ResponseObject
-     * @throws \NeverBounce\Errors\ThrottleException
-     * @throws \NeverBounce\Errors\HttpClientException
-     * @throws \NeverBounce\Errors\GeneralException
-     * @throws \NeverBounce\Errors\BadReferrerException
-     * @throws \NeverBounce\Errors\AuthException
-     */
-    public static function createFromArray($array, $filename, $runsample = null, $autoparse = null, $autostart = null)
-    {
-        self::$lastInstance = $obj = new self();
-        $obj->setContentType('application/json');
-        $res = $obj->request('POST', 'jobs/create', [
-            'input_location' => 'supplied',
-            'input' => $array,
-            'filename' => $filename,
-            'run_sample' => $runsample,
-            'auto_start' => $autostart,
-            'auto_parse' => $autoparse,
-        ]);
-        return new ResponseObject($res);
-    }
-
-    /**
-     * @param $filehandler
-     * @param $filename
-     * @param bool $autoparse
-     * @param bool $autostart
-     * @return ResponseObject
-     * @throws \NeverBounce\Errors\ThrottleException
-     * @throws \NeverBounce\Errors\HttpClientException
-     * @throws \NeverBounce\Errors\GeneralException
-     * @throws \NeverBounce\Errors\BadReferrerException
-     * @throws \NeverBounce\Errors\AuthException
-     */
-//    public static function createFromFile($filehandler, $filename, $autoparse = true, $autostart = true)
-//    {
-//        self::$lastInstance = $obj = new self();
-//        $res = $obj->request('PUT', 'jobs/create', [], $filehandler);
-//        return new ResponseObject($res);
-//    }
 
     /**
      * @param $jobId
