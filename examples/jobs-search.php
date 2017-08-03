@@ -10,11 +10,7 @@ $jobs = \NeverBounce\Jobs::search([
 //    'job_id' => 10000, // Filter jobs based on id
 //    'filename' => 'Book1.csv', // Filter jobs based on filename
 //    'completed' => true, // Show completed only
-//    'processing' => true, // Show processing only
-//    'indexing' => true, // Show indexing only
-//    'failed' => true, // Show failed only
-//    'manual_review' => true, // Show manual review only
-//    'unpurchased' => true, // Show unpurchased only
+//    'job_status' => 'complete', // Show completed jobs only
 //    'page' => 1, // Page to start from
 //    'items_per_page' => 10, // Number of items per page
 ]);
