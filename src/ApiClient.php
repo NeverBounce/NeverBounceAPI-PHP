@@ -204,14 +204,14 @@ class ApiClient
         ]);
         $this->client->setOpt(CURLOPT_TIMEOUT, $this->timeout);
         $this->client->setOpt(CURLOPT_RETURNTRANSFER, true);
-        $this->client->setOpt(CURLOPT_HEADERFUNCTION, function ($curl, $header_line) {
+        $this->client->setOpt(CURLOPT_HEADERFUNCTION, function ($curl, $headerLine) {
             // Ignore the HTTP request line (HTTP/1.1 200 OK)
-            if (strpos($header_line, ":") === false) {
-                return strlen($header_line);
+            if (strpos($headerLine, ":") === false) {
+                return strlen($headerLine);
             }
-            list($key, $value) = explode(":", trim($header_line), 2);
+            list($key, $value) = explode(":", trim($headerLine), 2);
             $this->responseHeaders[trim($key)] = trim($value);
-            return strlen($header_line);
+            return strlen($headerLine);
         });
 
         $this->rawResponse = $this->client->execute();

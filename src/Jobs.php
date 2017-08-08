@@ -36,10 +36,10 @@ class Jobs extends ApiClient
      * @throws \NeverBounce\Errors\BadReferrerException
      * @throws \NeverBounce\Errors\AuthException
      */
-    public static function status($id)
+    public static function status($jobId)
     {
         self::$lastInstance = $obj = new self();
-        $res = $obj->request('GET', 'jobs/status', ['job_id' => $id]);
+        $res = $obj->request('GET', 'jobs/status', ['job_id' => $jobId]);
         return new ResponseObject($res);
     }
 
