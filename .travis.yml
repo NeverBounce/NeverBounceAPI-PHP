@@ -1,11 +1,11 @@
-# Borrowing this from stripe
 language: php
-
 php:
-  - 5.5
-  - 5.6
-  - 7.0
-  - 7.1
-
+- 5.5
+- 5.6
+- 7.0
+- 7.1
 install:
-  - composer install
+- composer install
+notifications:
+  slack:
+    secure: CeBkrTpy9JGpIndIqfAl6xifr/BGamOia5Z4G6sw9faqjHFBvXFa9wYotENmrmZCKy/vItk2J+MjfYe9d4zXwi6PFSQJj+CWGm94d91iezmUZlKkTHirNPS+z9gVYxfySg9xjafWdMyidN71BstgyiWGuHBAtscJB7k4Zw0GAE9DuWJsyn49BQjvtOMjFsUtpTkTMDgZWEpVFYR2EaG0sAjP7p1b6Fym9rMwMn3YlcTRXKbK2AXWF2SammAhrOILDwhRPGwqQm30pE197R+iu+x5O34saRGdtGmWhpUAnFqi1rUe8BQPeLy5ny/uIQdE//cikGzK/TSsQVod7D+YcEDuefbCQ/dscTM0zcweD1+Au2ErVNSodvtiIR91EWdxUmWmoR/A9LeuUktG0/tNc/BYY7joSorgEMGkUAV2FLZPxPNx04PfThQayiA4HthvBWvWB0dJuJGqtNw765qyzntLnpDCvLhJE2uISOLrfNbgNKaeqfVAmdJqj3VQvqcRp+AA6nRQ31WBMPgboeLpvJD3Ca2c2bfgvQobNBnTP1fU11l4TsoHIVglH6rVxntVVmIxBZ4AQ3qaIMSX8tPp0YlUb7iy89dW152ApYM1HcdQRCL92nzzxYb/1VisUxeisSjJM3J935FLlwTuNgIp1z7OtGy+1oAVIaEvxXD00NU=
