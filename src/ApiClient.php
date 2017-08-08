@@ -73,7 +73,8 @@ class ApiClient
             throw new AuthException(
                 'An API key has not been set yet; Use the '
                 . 'NeverBounce\Auth::setApiKey($key) method to '
-                . 'set the key before making a request.');
+                . 'set the key before making a request.'
+            );
         }
 
         $this->client = $clientInterface ?: new CurlClient();
@@ -83,7 +84,7 @@ class ApiClient
      * @param string $url Set the base URL to use for API requests. This method
      *     exists for development purposes
      */
-    static public function setBaseUrl($url)
+    public static function setBaseUrl($url)
     {
         self::$baseUrl = $url;
     }
@@ -91,7 +92,7 @@ class ApiClient
     /**
      * @return ApiClient
      */
-    static public function getLastRequest()
+    public static function getLastRequest()
     {
         return self::$lastInstance;
     }
@@ -99,7 +100,7 @@ class ApiClient
     /**
      * @param enables debug mode (dumps out encoded params and response)
      */
-    static public function debug()
+    public static function debug()
     {
         self::$debug = true;
     }
@@ -147,14 +148,19 @@ class ApiClient
      */
     public function setContentType($contentType)
     {
+        $supported = in_array(
+            $contentType,
+            ['application/x-www-form-urlencoded', 'application/json'],
+            true
+        );
+
         // Throw exception if unsupported content type is specified
-        if (!in_array($contentType,
-            ['application/x-www-form-urlencoded', 'application/json'], true)
-        ) {
+        if (!$supported) {
             throw new HttpClientException(
                 'An unsupported content type was supplied. This API '
                 . 'supports either \'application/x-www-form-urlencoded\' '
-                . 'or \'application/json\'.');
+                . 'or \'application/json\'.'
+            );
         }
 
         $this->contentType = $contentType;
@@ -180,7 +186,7 @@ class ApiClient
         // Encode parameters according to contentType
         $encodedParams = ($this->contentType === 'application/json') ? json_encode($params) : http_build_query($params);
 
-        if(self::$debug) {
+        if (self::$debug) {
             var_dump($encodedParams);
         }
 
@@ -188,7 +194,7 @@ class ApiClient
         $url = self::$baseUrl . $endpoint;
 
         // If this is a GET request append query to the end of the url
-        if(strtoupper($method) === 'GET') {
+        if (strtoupper($method) === 'GET') {
             $this->client->init($url . '?' . $encodedParams);
         } else {
             // Assume all other requests are POST and set fields accordingly
@@ -216,7 +222,7 @@ class ApiClient
 
         $this->rawResponse = $this->client->execute();
 
-        if(self::$debug) {
+        if (self::$debug) {
             var_dump($this->rawResponse);
         }
 
@@ -280,7 +286,7 @@ class ApiClient
     protected function response($respBody, $respHeaders, $respCode)
     {
         // Handle response based on Content-Type
-        if($respHeaders['Content-Type'] === 'application/json') {
+        if ($respHeaders['Content-Type'] === 'application/json') {
             $decoded = json_decode($respBody, true);
 
             // Check if the response was decoded properly
@@ -295,7 +301,7 @@ class ApiClient
             }
 
             // Check for missing status and error messages
-            if(!isset($decoded['status']) || ($decoded['status'] !== 'success' && !isset($decoded['message']))) {
+            if (!isset($decoded['status']) || ($decoded['status'] !== 'success' && !isset($decoded['message']))) {
                 throw new HttpClientException(
                     'The response from server is incomplete. '
                     . 'Either a status code was not included or '
@@ -309,9 +315,7 @@ class ApiClient
 
             // Handle other non success statuses
             if ($decoded['status'] !== 'success') {
-
                 switch ($decoded['status']) {
-
                     case 'auth_failure':
                         throw new AuthException(
                             'We were unable to authenticate your request. '

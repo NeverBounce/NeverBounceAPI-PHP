@@ -6,34 +6,36 @@
 require_once __DIR__ . '/bootstrap.php';
 
 // Verify a single email
-$verifiation = \NeverBounce\Single::verifyWithAddressInformation('mike@neverbounce.com');
+$verification = \NeverBounce\Single::verifyWithAddressInformation('mike@neverbounce.com');
 
 // Get verified email
-fwrite(STDOUT, 'Email Verified: ' . $verifiation->email . PHP_EOL);
+stdout('Email Verified: ' . $verification->email);
 
 // Get numeric verification result
-fwrite(STDOUT, 'Numeric Code: ' . $verifiation->result_integer . PHP_EOL);
+stdout('Numeric Code: ' . $verification->result_integer);
 
 // Get text based verification result
-fwrite(STDOUT, 'Text Code: ' . $verifiation->result . PHP_EOL);
+stdout('Text Code: ' . $verification->result);
 
 // Check for dns flag
-fwrite(STDOUT, 'Has DNS: ' . (string) $verifiation->hasFlag('has_dns') . PHP_EOL);
+stdout('Has DNS: ' . (string) $verification->hasFlag('has_dns'));
 
 // Check for free_email_host flag
-fwrite(STDOUT, 'Is free mail: ' . (string) $verifiation->hasFlag('free_email_host') . PHP_EOL);
+stdout('Is free mail: ' . (string) $verification->hasFlag('free_email_host'));
 
 // Get numeric verification result
-fwrite(STDOUT, 'Suggested Correction: ' . $verifiation->suggested_correction . PHP_EOL);
+stdout('Suggested Correction: ' . $verification->suggested_correction);
 
 // Check if email is valid
-fwrite(STDOUT, 'Is unknown: ' . (string) $verifiation->is('unknown') . PHP_EOL);
+stdout('Is unknown: ' . (string) $verification->is('unknown'));
 
 // Get numeric verification result
-fwrite(STDOUT, 'Isn\'t valid or catchall: ' . (string) $verifiation->not(['valid', 'catchall']) . PHP_EOL);
+stdout('Isn\'t valid or catchall: ' . (string) $verification->not(['valid', 'catchall']));
 
 // Get credits used
-fwrite(STDOUT, 'Credits used: ' . ($verifiation->credits_info->paid_credits_used + $verifiation->credits_info->free_credits_used) . PHP_EOL);
+$credits = ($verification->credits_info->paid_credits_used
+    + $verification->credits_info->free_credits_used);
+stdout('Credits used: ' . $credits);
 
 // Get host
-fwrite(STDOUT, 'Email host: ' . $verifiation->address_info->host . PHP_EOL);
+stdout('Email host: ' . $verification->address_info->host);

@@ -31,8 +31,12 @@ class VerificationObject extends ResponseObject
     {
         $response['email'] = $email;
         $response['result_integer'] = self::$integerCodes[$response['result']];
-        $response['credits_info'] = new ResponseObject(isset($response['credits_info']) ? $response['credits_info'] : []);
-        $response['address_info'] = new ResponseObject(isset($response['address_info']) ? $response['address_info'] : []);
+        $response['credits_info'] = new ResponseObject(
+            isset($response['credits_info']) ? $response['credits_info'] : []
+        );
+        $response['address_info'] = new ResponseObject(
+            isset($response['address_info']) ? $response['address_info'] : []
+        );
         parent::__construct($response);
     }
 
@@ -52,7 +56,7 @@ class VerificationObject extends ResponseObject
     public function is($types)
     {
         if (is_array($types)) {
-            return (in_array($this->result_integer,$types, false) || in_array($this->result, $types, false));
+            return (in_array($this->result_integer, $types, false) || in_array($this->result, $types, false));
         }
 
         return ($types == $this->result_integer || $types == $this->result);

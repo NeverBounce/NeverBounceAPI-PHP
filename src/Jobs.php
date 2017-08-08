@@ -55,8 +55,14 @@ class Jobs extends ApiClient
      * @throws \NeverBounce\Errors\BadReferrerException
      * @throws \NeverBounce\Errors\AuthException
      */
-    public static function create($input, $inputlocation, $filename, $runsample = null, $autoparse = null, $autostart = null)
-    {
+    public static function create(
+        $input,
+        $inputlocation,
+        $filename,
+        $runsample = null,
+        $autoparse = null,
+        $autostart = null
+    ) {
         self::$lastInstance = $obj = new self();
         $obj->setContentType('application/json');
         $res = $obj->request('POST', 'jobs/create', [
@@ -147,8 +153,11 @@ class Jobs extends ApiClient
         ]));
 
         // Wrap verification results with teh VerificationObject
-        foreach($res['results'] as $key => $value) {
-            $res['results'][$key]['verification'] = new VerificationObject($value['data']['email'], $value['verification']);
+        foreach ($res['results'] as $key => $value) {
+            $res['results'][$key]['verification'] = new VerificationObject(
+                $value['data']['email'],
+                $value['verification']
+            );
         }
         return new ResponseObject($res);
     }
