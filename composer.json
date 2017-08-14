@@ -12,7 +12,11 @@
     "authors": [
         {
             "name": "Michael Mollick",
-            "email": "mike@creavos.com"
+            "email": "mike@neverbounce.com"
+        },
+        {
+            "name": "Ankur Pandit",
+            "email": "ankur@neverbounce.com"
         }
     ],
     "autoload" : {
