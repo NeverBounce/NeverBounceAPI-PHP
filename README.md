@@ -12,7 +12,8 @@
 > Looking for the V3 API wrapper? Click [here](https://github.com/NeverBounce/NeverBounceAPI-PHP/tree/v3)
 
 This is the official NeverBounce API PHP wrapper. It provides helpful methods to quickly implement our API in your existing php applications.
-###Requirements
+
+### Requirements
 * PHP 5.5 or greater
 * PHP JSON extension
 * PHP cURL extension
@@ -37,6 +38,7 @@ Or add this to your composer.json
 }
 ```
 and run `composer install`
+
 Manual Installation
 ---
 You can clone the repo directly and include the files yourself via an auto loader. Keep in mind that this package does follow the PSR-4 spec.
