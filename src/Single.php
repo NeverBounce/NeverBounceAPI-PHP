@@ -6,8 +6,8 @@ class Single extends ApiClient
 {
     /**
      * @param $email
-     * @param int|null $addressinfo
-     * @param int|null $creditsinfo
+     * @param bool|null $addressinfo
+     * @param bool|null $creditsinfo
      * @param int|null $maxexecution
      * @return VerificationObject
      * @throws \NeverBounce\Errors\ThrottleException
@@ -24,7 +24,6 @@ class Single extends ApiClient
             'address_info' => $addressinfo,
             'credits_info' => $creditsinfo,
             'max_execution_time' => $maxexecution,
-            'credits_info' => true,
         ]);
         return new VerificationObject($email, $res);
     }
