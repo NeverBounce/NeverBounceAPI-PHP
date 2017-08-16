@@ -3,8 +3,8 @@
 <p align="center">
 <a href="https://travis-ci.org/NeverBounce/NeverBounceAPI-PHP"><img src="https://travis-ci.org/NeverBounce/NeverBounceAPI-PHP.svg" alt="Build Status"></a>
 <a href="https://codeclimate.com/github/NeverBounce/NeverBounceAPI-PHP"><img src="https://codeclimate.com/github/NeverBounce/NeverBounceAPI-PHP/badges/gpa.svg" /></a>
-<a href="https://www.npmjs.com/package/neverbounce"><img src="https://img.shields.io/packagist/v/neverbounce/neverbounce-php.svg" /></a>
-<a href="https://www.npmjs.com/package/neverbounce"><img src="https://img.shields.io/packagist/dm/neverbounce/neverbounce-php.svg" /></a>
+<a href="https://packagist.org/packages/neverbounce/neverbounce-php"><img src="https://img.shields.io/packagist/v/neverbounce/neverbounce-php.svg" /></a>
+<a href="https://packagist.org/packages/neverbounce/neverbounce-php"><img src="https://img.shields.io/packagist/dm/neverbounce/neverbounce-php.svg" /></a>
 </p>
 
 > This branch if for a yet unreleased version of the API. Please use the version of the wrapper in the master branch**
