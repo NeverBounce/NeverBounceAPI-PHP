@@ -291,7 +291,7 @@ class ApiClient
 
             // Check if the response was decoded properly
             if ($decoded === null) {
-                throw new HttpClientException(
+                throw new GeneralException(
                     'The response from NeverBounce was unable '
                     . 'to be parsed as json. Try the request '
                     . 'again, if this error persists'
@@ -302,7 +302,7 @@ class ApiClient
 
             // Check for missing status and error messages
             if (!isset($decoded['status']) || ($decoded['status'] !== 'success' && !isset($decoded['message']))) {
-                throw new HttpClientException(
+                throw new GeneralException(
                     'The response from server is incomplete. '
                     . 'Either a status code was not included or '
                     . 'the an error was returned without an error '
@@ -315,47 +315,33 @@ class ApiClient
 
             // Handle other non success statuses
             if ($decoded['status'] !== 'success') {
-                switch ($decoded['status']) {
-                    case 'auth_failure':
-                        throw new AuthException(
-                            'We were unable to authenticate your request. '
-                            . 'The following information was supplied: '
-                            . "{$decoded['message']}"
-                            . "\n\n(auth_failure)"
-                        );
 
-                    case 'temp_unavail':
-                        throw new GeneralException(
-                            'We were unable to complete your request. '
-                            . 'The following information was supplied: '
-                            . "{$decoded['message']}"
-                            . "\n\n(temp_unavail)"
-                        );
+                $exceptionLUT = [
+                    'auth_failure' => AuthException::class,
+                    'bad_referrer' => BadReferrerException::class,
+                    'general_failure' => GeneralException::class,
+                    'throttle_triggered' => ThrottleException::class,
+                ];
+                if(isset($exceptionLUT[$decoded['status']])) {
+                    $exception = $exceptionLUT[$decoded['status']];
+                } else {
+                    $exception = GeneralException::class;
+                }
 
-                    case 'throttle_triggered':
-                        throw new ThrottleException(
-                            'We were unable to complete your request. '
-                            . 'The following information was supplied: '
-                            . "{$decoded['message']}"
-                            . "\n\n(throttle_triggered)"
-                        );
-
-                    case 'bad_referrer':
-                        throw new BadReferrerException(
-                            'We were unable to complete your request. '
-                            . 'The following information was supplied: '
-                            . "{$decoded['message']}"
-                            . "\n\n(bad_referrer)"
-                        );
-
-                    case 'general_failure':
-                    default:
-                        throw new GeneralException(
-                            'We were unable to complete your request. '
-                            . 'The following information was supplied: '
-                            . "{$decoded['message']}"
-                            . "\n\n({$decoded['status']})"
-                        );
+                if($exception === AuthException::class) {
+                    throw new $exception(
+                        'We were unable to authenticate your request. '
+                        . 'The following information was supplied: '
+                        . "{$decoded['message']}"
+                        . "\n\n(auth_failure)"
+                    );
+                } else {
+                    throw new $exception(
+                        'We were unable to complete your request. '
+                        . 'The following information was supplied: '
+                        . "{$decoded['message']}"
+                        . "\n\n({$decoded['status']})"
+                    );
                 }
             }
 
