@@ -4,6 +4,7 @@ use NeverBounce\Errors\AuthException;
 use NeverBounce\Errors\BadReferrerException;
 use NeverBounce\Errors\GeneralException;
 use NeverBounce\Errors\HttpClientException;
+use NeverBounce\Errors\ThrottleException;
 
 class ApiClientTest extends TestCase
 {
@@ -170,7 +171,7 @@ class ApiClientTest extends TestCase
 
         $json = '{"status": "throttle_triggered","message": "Too many requests in a short amount of time","execution_time": 96}';
         $client = new ApiClient($this->getMockHttpClient());
-        $this->setExpectedException(GeneralException::class);
+        $this->setExpectedException(ThrottleException::class);
         $method->invoke($client, $json, $this->generateHeaders(), 200);
     }
 
