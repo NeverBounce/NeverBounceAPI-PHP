@@ -7,8 +7,6 @@
 <a href="https://packagist.org/packages/neverbounce/neverbounce-php"><img src="https://img.shields.io/packagist/dm/neverbounce/neverbounce-php.svg" /></a>
 </p>
 
-> This branch if for a yet unreleased version of the API. Please use the version of the wrapper in the master branch**
-
 > Looking for the V3 API wrapper? Click [here](https://github.com/NeverBounce/NeverBounceAPI-PHP/tree/v3)
 
 This is the official NeverBounce API PHP wrapper. It provides helpful methods to quickly implement our API in your existing php applications.
