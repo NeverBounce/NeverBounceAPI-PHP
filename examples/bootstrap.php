@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * This file is support for the example scripts contained within this directory.
+ * To run the examples call the intended example's PHP script directly, for
+ * example:
+ *     php examples/account-info.php
+ *
+ */
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../.api-key.php';
 

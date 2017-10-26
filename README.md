@@ -41,3 +41,18 @@ Manual Installation
 ---
 You can clone the repo directly and include the files yourself via an auto loader. Keep in mind that this package does follow the PSR-4 spec.
 ```git clone https://github.com/creavos/NeverBounceAPI-PHP```
+
+Running Examples
+---
+
+First clone or download the repository to your local machine and install the composer dependencies. Once the composer dependencies are installed create a new file in the project's root directory called `.api-key.php` with the following contents (adding your own API key):
+
+```php
+$api_key = "secrete_api_key_goes_here";
+``` 
+
+With the API key file created you can now run the examples contained within the `example/` directory.
+
+```php
+php examples/account-info.php
+```
