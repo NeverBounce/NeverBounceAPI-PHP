@@ -48,6 +48,8 @@ Running Examples
 First clone or download the repository to your local machine and install the composer dependencies. Once the composer dependencies are installed create a new file in the project's root directory called `.api-key.php` with the following contents (adding your own API key):
 
 ```php
+<?php
+
 $api_key = "secrete_api_key_goes_here";
 ``` 
 
