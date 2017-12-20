@@ -6,7 +6,7 @@
 require_once __DIR__ . '/bootstrap.php';
 
 // Verify a single email
-$verification = \NeverBounce\Single::check('mike@yaho.com');
+$verification = \NeverBounce\Single::check('mike@yahoo.com', true);
 
 // Get verified email
 stdout('Email Verified: ' . $verification->email);
