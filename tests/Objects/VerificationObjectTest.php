@@ -1,6 +1,8 @@
 <?php namespace NeverBounce;
 
+use NeverBounce\Errors\GeneralException;
 use NeverBounce\Object\VerificationObject;
+use Exception;
 
 class VerificationObjectTest extends \PHPUnit_Framework_TestCase
 {
@@ -120,5 +122,26 @@ class VerificationObjectTest extends \PHPUnit_Framework_TestCase
             VerificationObject::DISPOSABLE,
         ]));
         $this->assertFalse($valid->not([VerificationObject::VALID]));
+    }
+
+    public function testInvalidResponseHandling()
+    {
+        $response = <<<HTML
+<html>
+<head><title>502 Bad Gateway</title></head>
+<body bgcolor="white">
+<center><h1>502 Bad Gateway</h1></center>
+<hr><center>nginx/1.10.3 (Ubuntu)</center>
+</body>
+</html>
+HTML;
+
+        try {
+            new VerificationObject('valid@neverbounce.com', $response);
+        } catch (Exception $exception) {
+            $this->assertInstanceOf(GeneralException::class, $exception);
+            $expectedMessage = 'Invalid server response. Array is expected instance of \'string\' given';
+            $this->assertEquals($expectedMessage, $exception->getMessage());
+        }
     }
 }

@@ -1,5 +1,7 @@
 <?php namespace NeverBounce\Object;
 
+use NeverBounce\Errors\GeneralException;
+
 class VerificationObject extends ResponseObject
 {
 
@@ -26,9 +28,12 @@ class VerificationObject extends ResponseObject
      * Verification constructor.
      * @param string $email
      * @param array $response
+     * @throws GeneralException
      */
     public function __construct($email, $response)
     {
+        $this->validateResponse($response);
+
         $response['email'] = $email;
         $response['result_integer'] = self::$integerCodes[$response['result']];
         $response['credits_info'] = new ResponseObject(
@@ -38,6 +43,23 @@ class VerificationObject extends ResponseObject
             isset($response['address_info']) ? $response['address_info'] : []
         );
         parent::__construct($response);
+    }
+
+    /**
+     * @param mixed $response
+     *
+     * @throws GeneralException
+     */
+    private function validateResponse($response)
+    {
+        if (!is_array($response)) {
+            $exceptionMessage = sprintf(
+                'Invalid server response. Array is expected instance of \'%s\' given',
+                gettype($response)
+            );
+
+            throw new GeneralException($exceptionMessage);
+        }
     }
 
     /**
