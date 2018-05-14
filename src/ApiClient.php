@@ -292,72 +292,85 @@ class ApiClient
                 'The request to NeverBounce was unsuccessful '
                 . 'Try the request again, if this error persists'
                 . ' let us know at support@neverbounce.com.'
-                . "\n\n($type [status $respCode: $respBody])");
+                . "\n\n($type [status $respCode: $respBody])"
+            );
         }
 
         // Handle response based on Content-Type
         if ($respHeaders['Content-Type'] === 'application/json') {
-            $decoded = json_decode($respBody, true);
-
-            // Check if the response was decoded properly
-            if ($decoded === null) {
-                throw new GeneralException(
-                    'The response from NeverBounce was unable '
-                    . 'to be parsed as json. Try the request '
-                    . 'again, if this error persists'
-                    . ' let us know at support@neverbounce.com.'
-                    . "\n\n(Internal error [status $respCode: $respBody])"
-                );
-            }
-
-            // Check for missing status and error messages
-            if (!isset($decoded['status']) || ($decoded['status'] !== 'success' && !isset($decoded['message']))) {
-                throw new GeneralException(
-                    'The response from server is incomplete. '
-                    . 'Either a status code was not included or '
-                    . 'the an error was returned without an error '
-                    . 'message. Try the request again, if '
-                    . 'this error persists let us know at'
-                    . ' support@neverbounce.com.'
-                    . "\n\n(Internal error [status $respCode: $respBody])"
-                );
-            }
-
-            // Handle other non success statuses
-            if ($decoded['status'] !== 'success') {
-
-                $exceptionLUT = [
-                    'auth_failure' => AuthException::class,
-                    'bad_referrer' => BadReferrerException::class,
-                    'general_failure' => GeneralException::class,
-                    'throttle_triggered' => ThrottleException::class,
-                ];
-                if(isset($exceptionLUT[$decoded['status']])) {
-                    $exception = $exceptionLUT[$decoded['status']];
-                } else {
-                    $exception = GeneralException::class;
-                }
-
-                if($exception === AuthException::class) {
-                    throw new $exception(
-                        'We were unable to authenticate your request. '
-                        . 'The following information was supplied: '
-                        . "{$decoded['message']}"
-                        . "\n\n(auth_failure)"
-                    );
-                } else {
-                    throw new $exception(
-                        'We were unable to complete your request. '
-                        . 'The following information was supplied: '
-                        . "{$decoded['message']}"
-                        . "\n\n({$decoded['status']})"
-                    );
-                }
-            }
-
-            return $this->decodedResponse = $decoded;
+            return $this->jsonResponse($respBody, $respHeaders, $respCode);
         }
 
         return $this->decodedResponse = $respBody;
+    }
+
+    /**
+     * @param $respBody
+     * @param $respHeaders
+     * @param $respCode
+     * @return mixed
+     * @throws GeneralException
+     */
+    protected function jsonResponse($respBody, $respHeaders, $respCode)
+    {
+        $decoded = json_decode($respBody, true);
+
+        // Check if the response was decoded properly
+        if ($decoded === null) {
+            throw new GeneralException(
+                'The response from NeverBounce was unable '
+                . 'to be parsed as json. Try the request '
+                . 'again, if this error persists'
+                . ' let us know at support@neverbounce.com.'
+                . "\n\n(Internal error [status $respCode: $respBody])"
+            );
+        }
+
+        // Check for missing status and error messages
+        if (!isset($decoded['status']) || ($decoded['status'] !== 'success' && !isset($decoded['message']))) {
+            throw new GeneralException(
+                'The response from server is incomplete. '
+                . 'Either a status code was not included or '
+                . 'the an error was returned without an error '
+                . 'message. Try the request again, if '
+                . 'this error persists let us know at'
+                . ' support@neverbounce.com.'
+                . "\n\n(Internal error [status $respCode: $respBody])"
+            );
+        }
+
+        // Handle other non success statuses
+        if ($decoded['status'] !== 'success') {
+
+            $exceptionLUT = [
+                'auth_failure' => AuthException::class,
+                'bad_referrer' => BadReferrerException::class,
+                'general_failure' => GeneralException::class,
+                'throttle_triggered' => ThrottleException::class,
+            ];
+            if(isset($exceptionLUT[$decoded['status']])) {
+                $exception = $exceptionLUT[$decoded['status']];
+            } else {
+                $exception = GeneralException::class;
+            }
+
+            if($exception === AuthException::class) {
+                throw new $exception(
+                    'We were unable to authenticate your request. '
+                    . 'The following information was supplied: '
+                    . "{$decoded['message']}"
+                    . "\n\n(auth_failure)"
+                );
+            } else {
+                throw new $exception(
+                    'We were unable to complete your request. '
+                    . 'The following information was supplied: '
+                    . "{$decoded['message']}"
+                    . "\n\n({$decoded['status']})"
+                );
+            }
+        }
+
+        return $this->decodedResponse = $decoded;
     }
 }
