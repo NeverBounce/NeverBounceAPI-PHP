@@ -62,6 +62,16 @@ class ApiClient
     protected $statusCode = 0;
 
     /**
+     * @var array
+     */
+    protected $exceptionLUT = [
+        'auth_failure' => AuthException::class,
+        'bad_referrer' => BadReferrerException::class,
+        'general_failure' => GeneralException::class,
+        'throttle_triggered' => ThrottleException::class,
+    ];
+
+    /**
      * ApiClient constructor.
      * @param HttpClientInterface $clientInterface
      * @throws AuthException
@@ -275,79 +285,94 @@ class ApiClient
     /**
      * Parses the response string and handles any errors
      * @param $respBody
+     * @param $respHeaders
      * @param $respCode
      * @return mixed
-     * @throws AuthException
-     * @throws BadReferrerException
      * @throws GeneralException
-     * @throws HttpClientException
-     * @throws ThrottleException
      */
     protected function response($respBody, $respHeaders, $respCode)
     {
+        // Handle non successful HTTP status codes
+        if ($respCode > 400) {
+            $type = $respCode > 500 ? 'Internal error' : 'Request error';
+            throw new GeneralException(
+                'The request to NeverBounce was unsuccessful '
+                . 'Try the request again, if this error persists'
+                . ' let us know at support@neverbounce.com.'
+                . "\n\n($type [status $respCode: $respBody])"
+            );
+        }
+
         // Handle response based on Content-Type
         if ($respHeaders['Content-Type'] === 'application/json') {
-            $decoded = json_decode($respBody, true);
-
-            // Check if the response was decoded properly
-            if ($decoded === null) {
-                throw new GeneralException(
-                    'The response from NeverBounce was unable '
-                    . 'to be parsed as json. Try the request '
-                    . 'again, if this error persists'
-                    . ' let us know at support@neverbounce.com.'
-                    . "\n\n(Internal error [status $respCode: $respBody])"
-                );
-            }
-
-            // Check for missing status and error messages
-            if (!isset($decoded['status']) || ($decoded['status'] !== 'success' && !isset($decoded['message']))) {
-                throw new GeneralException(
-                    'The response from server is incomplete. '
-                    . 'Either a status code was not included or '
-                    . 'the an error was returned without an error '
-                    . 'message. Try the request again, if '
-                    . 'this error persists let us know at'
-                    . ' support@neverbounce.com.'
-                    . "\n\n(Internal error [status $respCode: $respBody])"
-                );
-            }
-
-            // Handle other non success statuses
-            if ($decoded['status'] !== 'success') {
-
-                $exceptionLUT = [
-                    'auth_failure' => AuthException::class,
-                    'bad_referrer' => BadReferrerException::class,
-                    'general_failure' => GeneralException::class,
-                    'throttle_triggered' => ThrottleException::class,
-                ];
-                if(isset($exceptionLUT[$decoded['status']])) {
-                    $exception = $exceptionLUT[$decoded['status']];
-                } else {
-                    $exception = GeneralException::class;
-                }
-
-                if($exception === AuthException::class) {
-                    throw new $exception(
-                        'We were unable to authenticate your request. '
-                        . 'The following information was supplied: '
-                        . "{$decoded['message']}"
-                        . "\n\n(auth_failure)"
-                    );
-                } else {
-                    throw new $exception(
-                        'We were unable to complete your request. '
-                        . 'The following information was supplied: '
-                        . "{$decoded['message']}"
-                        . "\n\n({$decoded['status']})"
-                    );
-                }
-            }
-
-            return $this->decodedResponse = $decoded;
+            return $this->jsonResponse($respBody, $respCode);
         }
 
         return $this->decodedResponse = $respBody;
+    }
+
+    /**
+     * @param $respBody
+     * @param $respHeaders
+     * @param $respCode
+     * @return mixed
+     * @throws GeneralException
+     */
+    protected function jsonResponse($respBody, $respCode)
+    {
+        $decoded = json_decode($respBody, true);
+
+        // Check if the response was decoded properly
+        if ($decoded === null) {
+            throw new GeneralException(
+                'The response from NeverBounce was unable to be parsed '
+                . 'as json. Try the request again, if this error persists let us'
+                . ' know at support@neverbounce.com.'
+                . "\n\n(Internal error [status $respCode: $respBody])"
+            );
+        }
+
+        // Check for missing status and error messages
+        if (!isset($decoded['status']) || ($decoded['status'] !== 'success' && !isset($decoded['message']))) {
+            throw new GeneralException(
+                'The response from server is incomplete. Either a '
+                . 'status code was not included or the an error was returned '
+                . 'without an error message. Try the request again, if this '
+                . 'error persists let us know at support@neverbounce.com.'
+                . "\n\n(Internal error [status $respCode: $respBody])"
+            );
+        }
+
+        // Handle other non success statuses
+        if ($decoded['status'] !== 'success') {
+            $this->parseErrors($decoded);
+        }
+
+        return $this->decodedResponse = $decoded;
+    }
+
+    /**
+     * @param $decoded
+     */
+    protected function parseErrors($decoded)
+    {
+        $exception = isset($this->exceptionLUT[$decoded['status']])
+            ? $this->exceptionLUT[$decoded['status']] : GeneralException::class;
+
+        if($exception === AuthException::class) {
+            throw new $exception(
+                'We were unable to authenticate your request. '
+                . 'The following information was supplied: '
+                . "{$decoded['message']}"
+                . "\n\n(auth_failure)"
+            );
+        } else {
+            throw new $exception(
+                'We were unable to complete your request. '
+                . 'The following information was supplied: '
+                . "{$decoded['message']}"
+                . "\n\n({$decoded['status']})"
+            );
+        }
     }
 }

@@ -92,6 +92,19 @@ class ApiClientTest extends TestCase
     public function testFailedRequest()
     {
         $mock = $this->getMockHttpClient();
+        $mock->method('execute')->willReturn("<html><head><title>502 Bad Gateway</title></head><body bgcolor=\"white\"><center><h1>502 Bad Gateway</h1></center><hr><center>nginx/1.10.3 (Ubuntu)</center></body></html>");
+        $mock->method('getInfo')->willReturn(502);
+
+        $this->setExpectedException(GeneralException::class);
+
+        $client = new ApiClient($mock);
+        $client->request('GET', '/account/info');
+        $this->assertEquals(502, $client->getStatusCode());
+    }
+
+    public function testCurlFailureRequest()
+    {
+        $mock = $this->getMockHttpClient();
         $mock->method('execute')->willReturn(false);
         $mock->method('getErrno')->willReturn(7);
         $mock->method('getError')->willReturn('Curl Error');
