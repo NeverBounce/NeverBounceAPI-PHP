@@ -285,6 +285,16 @@ class ApiClient
      */
     protected function response($respBody, $respHeaders, $respCode)
     {
+        // Handle non successful HTTP status codes
+        if ($respCode > 400) {
+            $type = $respCode > 500 ? 'Internal error' : 'Request error';
+            throw new GeneralException(
+                'The request to NeverBounce was unsuccessful '
+                . 'Try the request again, if this error persists'
+                . ' let us know at support@neverbounce.com.'
+                . "\n\n($type [status $respCode: $respBody])");
+        }
+
         // Handle response based on Content-Type
         if ($respHeaders['Content-Type'] === 'application/json') {
             $decoded = json_decode($respBody, true);
