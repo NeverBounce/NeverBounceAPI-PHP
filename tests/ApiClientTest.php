@@ -10,7 +10,7 @@ class ApiClientTest extends TestCase
 {
     public function testConstructorWithoutApiKey()
     {
-        $this->setExpectedException(AuthException::class);
+        $this->expectException(AuthException::class);
         new ApiClient($this->getMockHttpClient());
     }
 
@@ -55,7 +55,7 @@ class ApiClientTest extends TestCase
         $api->setContentType('application/json');
         $this->assertEquals('application/json', $property->getValue($api));
 
-        $this->setExpectedException(HttpClientException::class);
+        $this->expectException(HttpClientException::class);
         $api->setContentType('application/pdf');
     }
 
@@ -111,7 +111,7 @@ class ApiClientTest extends TestCase
         $mock->method('execute')->willReturn("<html><head><title>502 Bad Gateway</title></head><body bgcolor=\"white\"><center><h1>502 Bad Gateway</h1></center><hr><center>nginx/1.10.3 (Ubuntu)</center></body></html>");
         $mock->method('getInfo')->willReturn(502);
 
-        $this->setExpectedException(GeneralException::class);
+        $this->expectException(GeneralException::class);
 
         $client = new ApiClient($mock);
         $client->request('GET', '/account/info');
@@ -125,7 +125,7 @@ class ApiClientTest extends TestCase
         $mock->method('getErrno')->willReturn(7);
         $mock->method('getError')->willReturn('Curl Error');
 
-        $this->setExpectedException(HttpClientException::class);
+        $this->expectException(HttpClientException::class);
 
         $client = new ApiClient($mock);
         $client->request('GET', '/account/info');
@@ -152,7 +152,7 @@ class ApiClientTest extends TestCase
 
         $json = '{"status": "general_failure","message": "Something went wrong","execution_time": 96}';
         $client = new ApiClient($this->getMockHttpClient());
-        $this->setExpectedException(GeneralException::class);
+        $this->expectException(GeneralException::class);
         $method->invoke($client, $json, $this->generateHeaders(), 200);
     }
 
@@ -177,7 +177,7 @@ class ApiClientTest extends TestCase
 
         $json = "NOT JSON!!";
         $client = new ApiClient($this->getMockHttpClient());
-        $this->setExpectedException(GeneralException::class);
+        $this->expectException(GeneralException::class);
         $method->invoke($client, $json, $this->generateHeaders(), 200);
     }
 
@@ -189,7 +189,7 @@ class ApiClientTest extends TestCase
 
         $json = '{"status": "auth_failure","message": "Invalid API key \'adsfad\'","execution_time": 96}';
         $client = new ApiClient($this->getMockHttpClient());
-        $this->setExpectedException(AuthException::class);
+        $this->expectException(AuthException::class);
         $method->invoke($client, $json, $this->generateHeaders(), 200);
     }
 
@@ -201,7 +201,7 @@ class ApiClientTest extends TestCase
 
         $json = '{"status": "temp_unavail","message": "Unable to communicate with backend services","execution_time": 96}';
         $client = new ApiClient($this->getMockHttpClient());
-        $this->setExpectedException(GeneralException::class);
+        $this->expectException(GeneralException::class);
         $method->invoke($client, $json, $this->generateHeaders(), 200);
     }
 
@@ -213,7 +213,7 @@ class ApiClientTest extends TestCase
 
         $json = '{"status": "throttle_triggered","message": "Too many requests in a short amount of time","execution_time": 96}';
         $client = new ApiClient($this->getMockHttpClient());
-        $this->setExpectedException(ThrottleException::class);
+        $this->expectException(ThrottleException::class);
         $method->invoke($client, $json, $this->generateHeaders(), 200);
     }
 
@@ -225,7 +225,7 @@ class ApiClientTest extends TestCase
 
         $json = '{"status": "bad_referrer","message": "The referrer this request originated from is not on the trusted list","execution_time": 96}';
         $client = new ApiClient($this->getMockHttpClient());
-        $this->setExpectedException(BadReferrerException::class);
+        $this->expectException(BadReferrerException::class);
         $method->invoke($client, $json, $this->generateHeaders(), 200);
     }
 }
