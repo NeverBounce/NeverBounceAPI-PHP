@@ -1,6 +1,6 @@
 <?php namespace NeverBounce;
 
-class AuthTest extends \PHPUnit_Framework_TestCase
+class AuthTest extends TestCase
 {
     public function testApiKeySetterGetter()
     {

@@ -2,7 +2,7 @@
 
 use NeverBounce\Object\VerificationObject;
 
-class VerificationObjectTest extends \PHPUnit_Framework_TestCase
+class VerificationObjectTest extends TestCase
 {
     public function testSingleVerification()
     {
@@ -72,7 +72,7 @@ class VerificationObjectTest extends \PHPUnit_Framework_TestCase
             $verification->suggested_correction);
     }
 
-    public function testIs()
+    public function testIsWithSingleString()
     {
         $valid = new VerificationObject('valid@neverbounce.com', [
             'result' => 'valid',
@@ -80,24 +80,154 @@ class VerificationObjectTest extends \PHPUnit_Framework_TestCase
             'suggested_correction' => '',
         ]);
 
-        $this->assertTrue(true, $valid->is(VerificationObject::VALID));
-        $this->assertTrue(true, $valid->is('valid'));
-        $this->assertTrue(true, $valid->is(0));
-        $this->assertFalse($valid->is(VerificationObject::INVALID));
-        $this->assertFalse($valid->is(VerificationObject::DISPOSABLE));
-        $this->assertFalse($valid->is(VerificationObject::CATCHALL));
-        $this->assertFalse($valid->is(VerificationObject::UNKNOWN));
+        $this->assertTrue($valid->is('valid'));
+        $this->assertFalse($valid->is('invalid'));
+        $this->assertFalse($valid->is('catchall'));
+        $this->assertFalse($valid->is('disposable'));
+        $this->assertFalse($valid->is('unknown'));
 
-        $this->assertTrue(true, $valid->is([VerificationObject::VALID]));
-        $this->assertFalse($valid->is([
+        $invalid = new VerificationObject('invalid@neverbounce.com', [
+            'result' => 'invalid',
+            'flags' => [],
+            'suggested_correction' => '',
+        ]);
+
+        $this->assertFalse($invalid->is('valid'));
+        $this->assertTrue($invalid->is('invalid'));
+        $this->assertFalse($invalid->is('catchall'));
+        $this->assertFalse($invalid->is('disposable'));
+        $this->assertFalse($invalid->is('unknown'));
+    }
+
+    public function testIsWithArrayOfString()
+    {
+        $valid = new VerificationObject('valid@neverbounce.com', [
+            'result' => 'valid',
+            'flags' => [],
+            'suggested_correction' => '',
+        ]);
+
+        $this->assertTrue($valid->is(['valid', 'invalid', 'catchall', 'unknown', 'disable']));
+        $this->assertTrue($valid->is(['valid']));
+        $this->assertFalse($valid->is(['invalid']));
+        $this->assertFalse($valid->is(['catchall']));
+        $this->assertFalse($valid->is(['disposable']));
+        $this->assertFalse($valid->is(['unknown']));
+
+        $invalid = new VerificationObject('invalid@neverbounce.com', [
+            'result' => 'invalid',
+            'flags' => [],
+            'suggested_correction' => '',
+        ]);
+
+        $this->assertTrue($invalid->is(['valid', 'invalid', 'catchall', 'unknown', 'disable']));
+        $this->assertFalse($invalid->is(['valid']));
+        $this->assertTrue($invalid->is(['invalid']));
+        $this->assertFalse($invalid->is(['catchall']));
+        $this->assertFalse($invalid->is(['disposable']));
+        $this->assertFalse($invalid->is(['unknown']));
+    }
+
+    public function testIsWithIntegerString()
+    {
+        $valid = new VerificationObject('valid@neverbounce.com', [
+            'result' => 'valid',
+            'flags' => [],
+            'suggested_correction' => '',
+        ]);
+
+        $this->assertTrue($valid->is(VerificationObject::VALID));
+        $this->assertFalse($valid->is(VerificationObject::INVALID));
+        $this->assertFalse($valid->is(VerificationObject::CATCHALL));
+        $this->assertFalse($valid->is(VerificationObject::CATCHALL));
+        $this->assertFalse($valid->is(VerificationObject::CATCHALL));
+
+        $invalid = new VerificationObject('invalid@neverbounce.com', [
+            'result' => 'invalid',
+            'flags' => [],
+            'suggested_correction' => '',
+        ]);
+
+        $this->assertFalse($invalid->is(VerificationObject::VALID));
+        $this->assertTrue($invalid->is(VerificationObject::INVALID));
+        $this->assertFalse($invalid->is(VerificationObject::CATCHALL));
+        $this->assertFalse($invalid->is(VerificationObject::CATCHALL));
+        $this->assertFalse($invalid->is(VerificationObject::CATCHALL));
+    }
+
+    public function testIsWithArrayOfIntegers()
+    {
+        $valid = new VerificationObject('valid@neverbounce.com', [
+            'result' => 'valid',
+            'flags' => [],
+            'suggested_correction' => '',
+        ]);
+
+        $this->assertTrue($valid->is([
+            VerificationObject::VALID,
             VerificationObject::INVALID,
             VerificationObject::CATCHALL,
-            VerificationObject::UNKNOWN,
             VerificationObject::DISPOSABLE,
+            VerificationObject::UNKNOWN,
+        ]));
+        $this->assertTrue($valid->is([VerificationObject::VALID]));
+        $this->assertFalse($valid->is([VerificationObject::INVALID]));
+        $this->assertFalse($valid->is([VerificationObject::CATCHALL]));
+        $this->assertFalse($valid->is([VerificationObject::DISPOSABLE]));
+        $this->assertFalse($valid->is([VerificationObject::UNKNOWN]));
+
+        $invalid = new VerificationObject('invalid@neverbounce.com', [
+            'result' => 'invalid',
+            'flags' => [],
+            'suggested_correction' => '',
+        ]);
+
+        $this->assertTrue($invalid->is([
+            VerificationObject::VALID,
+            VerificationObject::INVALID,
+            VerificationObject::CATCHALL,
+            VerificationObject::DISPOSABLE,
+            VerificationObject::UNKNOWN,
+        ]));
+        $this->assertFalse($invalid->is([VerificationObject::VALID]));
+        $this->assertTrue($invalid->is([VerificationObject::INVALID]));
+        $this->assertFalse($invalid->is([VerificationObject::CATCHALL]));
+        $this->assertFalse($invalid->is([VerificationObject::DISPOSABLE]));
+        $this->assertFalse($invalid->is([VerificationObject::UNKNOWN]));
+    }
+
+    public function testIsWithArrayOfStringsAndIntegers()
+    {
+        $valid = new VerificationObject('valid@neverbounce.com', [
+            'result' => 'valid',
+            'flags' => [],
+            'suggested_correction' => '',
+        ]);
+
+        $this->assertTrue($valid->is([
+            'valid',
+            VerificationObject::INVALID,
+            VerificationObject::CATCHALL,
+            VerificationObject::DISPOSABLE,
+            VerificationObject::UNKNOWN,
+        ]));
+
+        $invalid = new VerificationObject('invalid@neverbounce.com', [
+            'result' => 'invalid',
+            'flags' => [],
+            'suggested_correction' => '',
+        ]);
+
+        $this->assertTrue($invalid->is([
+            VerificationObject::VALID,
+            'invalid',
+            VerificationObject::CATCHALL,
+            VerificationObject::DISPOSABLE,
+            VerificationObject::UNKNOWN,
         ]));
     }
 
-    public function testNot()
+    public function testNotWithSingleString()
     {
         $valid = new VerificationObject('valid@neverbounce.com', [
             'result' => 'valid',
@@ -105,20 +235,164 @@ class VerificationObjectTest extends \PHPUnit_Framework_TestCase
             'suggested_correction' => '',
         ]);
 
-        $this->assertTrue(true, $valid->not(VerificationObject::INVALID));
-        $this->assertTrue(true, $valid->not(1));
-        $this->assertTrue(true, $valid->not('invalid'));
-        $this->assertTrue(true, $valid->not(VerificationObject::DISPOSABLE));
-        $this->assertTrue(true, $valid->not(VerificationObject::CATCHALL));
-        $this->assertTrue(true, $valid->not(VerificationObject::UNKNOWN));
-        $this->assertFalse($valid->not(VerificationObject::VALID));
+        $this->assertFalse($valid->not('valid'));
+        $this->assertTrue($valid->not('invalid'));
+        $this->assertTrue($valid->not('catchall'));
+        $this->assertTrue($valid->not('disposable'));
+        $this->assertTrue($valid->not('unknown'));
 
-        $this->assertTrue(true, $valid->not([
+        $invalid = new VerificationObject('invalid@neverbounce.com', [
+            'result' => 'invalid',
+            'flags' => [],
+            'suggested_correction' => '',
+        ]);
+
+        $this->assertTrue($invalid->not('valid'));
+        $this->assertFalse($invalid->not('invalid'));
+        $this->assertTrue($invalid->not('catchall'));
+        $this->assertTrue($invalid->not('disposable'));
+        $this->assertTrue($invalid->not('unknown'));
+    }
+
+    public function testNotWithArrayOfString()
+    {
+        $valid = new VerificationObject('valid@neverbounce.com', [
+            'result' => 'valid',
+            'flags' => [],
+            'suggested_correction' => '',
+        ]);
+
+        $this->assertFalse($valid->not(['valid', 'invalid', 'catchall', 'unknown', 'disable']));
+        $this->assertFalse($valid->not(['valid']));
+        $this->assertTrue($valid->not(['invalid']));
+        $this->assertTrue($valid->not(['catchall']));
+        $this->assertTrue($valid->not(['disposable']));
+        $this->assertTrue($valid->not(['unknown']));
+
+        $invalid = new VerificationObject('invalid@neverbounce.com', [
+            'result' => 'invalid',
+            'flags' => [],
+            'suggested_correction' => '',
+        ]);
+
+        $this->assertFalse($invalid->not(['valid', 'invalid', 'catchall', 'unknown', 'disable']));
+        $this->assertTrue($invalid->not(['valid']));
+        $this->assertFalse($invalid->not(['invalid']));
+        $this->assertTrue($invalid->not(['catchall']));
+        $this->assertTrue($invalid->not(['disposable']));
+        $this->assertTrue($invalid->not(['unknown']));
+    }
+
+    public function testNotWithIntegerString()
+    {
+        $valid = new VerificationObject('valid@neverbounce.com', [
+            'result' => 'valid',
+            'flags' => [],
+            'suggested_correction' => '',
+        ]);
+
+        $this->assertFalse($valid->not(VerificationObject::VALID));
+        $this->assertTrue($valid->not(VerificationObject::INVALID));
+        $this->assertTrue($valid->not(VerificationObject::CATCHALL));
+        $this->assertTrue($valid->not(VerificationObject::CATCHALL));
+        $this->assertTrue($valid->not(VerificationObject::CATCHALL));
+
+        $invalid = new VerificationObject('invalid@neverbounce.com', [
+            'result' => 'invalid',
+            'flags' => [],
+            'suggested_correction' => '',
+        ]);
+
+        $this->assertTrue($invalid->not(VerificationObject::VALID));
+        $this->assertFalse($invalid->not(VerificationObject::INVALID));
+        $this->assertTrue($invalid->not(VerificationObject::CATCHALL));
+        $this->assertTrue($invalid->not(VerificationObject::CATCHALL));
+        $this->assertTrue($invalid->not(VerificationObject::CATCHALL));
+    }
+
+    public function testNotWithArrayOfIntegers()
+    {
+        $valid = new VerificationObject('valid@neverbounce.com', [
+            'result' => 'valid',
+            'flags' => [],
+            'suggested_correction' => '',
+        ]);
+
+        $this->assertFalse($valid->not([
+            VerificationObject::VALID,
             VerificationObject::INVALID,
             VerificationObject::CATCHALL,
-            VerificationObject::UNKNOWN,
             VerificationObject::DISPOSABLE,
+            VerificationObject::UNKNOWN,
         ]));
         $this->assertFalse($valid->not([VerificationObject::VALID]));
+        $this->assertTrue($valid->not([VerificationObject::INVALID]));
+        $this->assertTrue($valid->not([VerificationObject::CATCHALL]));
+        $this->assertTrue($valid->not([VerificationObject::DISPOSABLE]));
+        $this->assertTrue($valid->not([VerificationObject::UNKNOWN]));
+
+        $invalid = new VerificationObject('invalid@neverbounce.com', [
+            'result' => 'invalid',
+            'flags' => [],
+            'suggested_correction' => '',
+        ]);
+
+        $this->assertFalse($invalid->not([
+            VerificationObject::VALID,
+            VerificationObject::INVALID,
+            VerificationObject::CATCHALL,
+            VerificationObject::DISPOSABLE,
+            VerificationObject::UNKNOWN,
+        ]));
+        $this->assertTrue($invalid->not([VerificationObject::VALID]));
+        $this->assertFalse($invalid->not([VerificationObject::INVALID]));
+        $this->assertTrue($invalid->not([VerificationObject::CATCHALL]));
+        $this->assertTrue($invalid->not([VerificationObject::DISPOSABLE]));
+        $this->assertTrue($invalid->not([VerificationObject::UNKNOWN]));
+    }
+
+    public function testNotWithArrayOfStringsAndIntegers()
+    {
+        $valid = new VerificationObject('valid@neverbounce.com', [
+            'result' => 'valid',
+            'flags' => [],
+            'suggested_correction' => '',
+        ]);
+
+        $this->assertTrue($valid->not([
+            VerificationObject::INVALID,
+            VerificationObject::CATCHALL,
+            VerificationObject::DISPOSABLE,
+            'unknown'
+        ]));
+
+        $this->assertFalse($valid->not([
+            'valid',
+            VerificationObject::INVALID,
+            VerificationObject::CATCHALL,
+            VerificationObject::DISPOSABLE,
+            'unknown'
+        ]));
+
+        $invalid = new VerificationObject('invalid@neverbounce.com', [
+            'result' => 'invalid',
+            'flags' => [],
+            'suggested_correction' => '',
+        ]);
+
+        $this->assertTrue($invalid->not([
+            VerificationObject::VALID,
+            VerificationObject::CATCHALL,
+            VerificationObject::DISPOSABLE,
+            'unknown'
+        ]));
+
+        $this->assertFalse($invalid->not([
+            VerificationObject::VALID,
+            'invalid',
+            VerificationObject::CATCHALL,
+            VerificationObject::DISPOSABLE,
+            'unknown'
+        ]));
     }
 }

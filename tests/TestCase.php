@@ -1,8 +1,9 @@
 <?php namespace NeverBounce;
 
 use NeverBounce\HttpClient\HttpClientInterface;
+use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 
-class TestCase extends \PHPUnit_Framework_TestCase
+class TestCase extends PHPUnitTestCase
 {
     protected function generateHeaders()
     {
@@ -22,15 +23,16 @@ class TestCase extends \PHPUnit_Framework_TestCase
 
     protected function getMockHttpClient()
     {
-        return $this->getMock(HttpClientInterface::class,
-            [
-                'init',
-                'setOpt',
-                'execute',
-                'getInfo',
-                'getErrno',
-                'getError',
-                'close',
-            ]);
+        $mock = $this->getMockBuilder(HttpClientInterface::class);
+        $mock->setMethods([
+            'init',
+            'setOpt',
+            'execute',
+            'getInfo',
+            'getErrno',
+            'getError',
+            'close',
+        ]);
+        return $mock->getMock();
     }
 }
