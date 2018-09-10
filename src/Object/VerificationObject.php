@@ -1,5 +1,15 @@
 <?php namespace NeverBounce\Object;
 
+/**
+ * Class VerificationObject
+ * @package NeverBounce\Object
+ * @property-read  string $email
+ * @property-read  string $result
+ * @property-read  int $result_integer
+ * @property-read  array $flags
+ * @property-read  ResponseObject $credits_info
+ * @property-read  ResponseObject $address_info
+ */
 class VerificationObject extends ResponseObject
 {
 
