@@ -56,10 +56,10 @@ class VerificationObject extends ResponseObject
     public function is($types)
     {
         if (is_array($types)) {
-            return (in_array($this->result_integer, $types, false) || in_array($this->result, $types, false));
+            return (in_array($this->result_integer, $types, true) || in_array($this->result, $types, true));
         }
 
-        return ($types == $this->result_integer || $types == $this->result);
+        return ($types === $this->result_integer || $types === $this->result);
     }
 
     /**
@@ -69,7 +69,7 @@ class VerificationObject extends ResponseObject
     public function not($types)
     {
         if (is_array($types)) {
-            return (!in_array($this->result_integer, $types, false) && !in_array($this->result, $types, false));
+            return (!in_array($this->result_integer, $types, true) && !in_array($this->result, $types, true));
         }
 
         return ($types !== $this->result_integer && $types !== $this->result);
