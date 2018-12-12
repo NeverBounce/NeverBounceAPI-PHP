@@ -129,7 +129,8 @@ class Jobs extends ApiClient
     public static function download($jobId, $query = [])
     {
         self::$lastInstance = $obj = new self();
-        $res = $obj->request('GET', 'jobs/download', array_merge($query, [
+        $res = $obj->setAcceptedType('application/octet-stream')
+            ->request('GET', 'jobs/download', array_merge($query, [
             'job_id' => $jobId
         ]));
         return $res;

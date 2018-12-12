@@ -42,6 +42,11 @@ class ApiClient
     protected $contentType = 'application/x-www-form-urlencoded';
 
     /**
+     * @var string The accepted content type
+     */
+    protected $acceptedType = 'application/json';
+
+    /**
      * @var array
      */
     protected $decodedResponse = [];
@@ -178,6 +183,16 @@ class ApiClient
     }
 
     /**
+     * @param $type
+     * @return $this
+     */
+    public function setAcceptedType($type)
+    {
+        $this->acceptedType = $type;
+        return $this;
+    }
+
+    /**
      * @param string $method
      * @param string $endpoint
      * @param array $params
@@ -303,8 +318,21 @@ class ApiClient
             );
         }
 
+        // Check that the response type is expected
+        $contentType = $respHeaders['content-type'];
+        if ($this->acceptedType !== $contentType) {
+            throw new GeneralException(
+                'The request to NeverBounce was unsuccessful '
+                . "Expected a response type of '{$this->acceptedType}' but "
+                . "received a response type of '{$contentType}. "
+                . 'Try the request again, if this error persists'
+                . ' let us know at support@neverbounce.com.'
+                . "\n\n(Unexpected Type [status $respCode: $respBody])"
+            );
+        }
+
         // Handle response based on Content-Type
-        if ($respHeaders['content-type'] === 'application/json') {
+        if ($this->acceptedType === 'application/json') {
             return $this->jsonResponse($respBody, $respCode);
         }
 

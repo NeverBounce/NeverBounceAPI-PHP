@@ -59,6 +59,22 @@ class ApiClientTest extends TestCase
         $api->setContentType('application/pdf');
     }
 
+    public function testSetAccepted()
+    {
+        Auth::setApiKey('123');
+
+        $reflector = new \ReflectionClass(ApiClient::class);
+        $property = $reflector->getProperty('acceptedType');
+        $property->setAccessible(true);
+
+        $api = new ApiClient($this->getMockHttpClient());
+        $this->assertEquals('application/json',
+            $property->getValue($api));
+
+        $api->setAcceptedType('text/csv');
+        $this->assertEquals('text/csv', $property->getValue($api));
+    }
+
     public function testSuccessfulRequest()
     {
         $mock = $this->getMockHttpClient();
@@ -136,6 +152,19 @@ class ApiClientTest extends TestCase
 
         $json = '{"status": "general_failure","message": "Something went wrong","execution_time": 96}';
         $client = new ApiClient($this->getMockHttpClient());
+        $this->setExpectedException(GeneralException::class);
+        $method->invoke($client, $json, $this->generateHeaders(), 200);
+    }
+
+    public function testMismatchedContentType()
+    {
+        $reflector = new \ReflectionClass(ApiClient::class);
+        $method = $reflector->getMethod('response');
+        $method->setAccessible(true);
+
+        $json = "{}";
+        $client = new ApiClient($this->getMockHttpClient());
+        $client->setAcceptedType('text/csv');
         $this->setExpectedException(GeneralException::class);
         $method->invoke($client, $json, $this->generateHeaders(), 200);
     }
