@@ -226,7 +226,7 @@ class ApiClient
                 return strlen($headerLine);
             }
             list($key, $value) = explode(":", trim($headerLine), 2);
-            $this->responseHeaders[trim($key)] = trim($value);
+            $this->responseHeaders[strtolower(trim($key))] = strtolower(trim($value));
             return strlen($headerLine);
         });
 
@@ -304,7 +304,7 @@ class ApiClient
         }
 
         // Handle response based on Content-Type
-        if ($respHeaders['Content-Type'] === 'application/json') {
+        if ($respHeaders['content-type'] === 'application/json') {
             return $this->jsonResponse($respBody, $respCode);
         }
 
