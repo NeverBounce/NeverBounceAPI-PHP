@@ -25,4 +25,31 @@ class ResponseObjectTest extends TestCase
         $resp->key = 'value2';
         $this->assertEquals('value', $resp->key);
     }
+
+    public function testCanBeOutputtedAsAnArray()
+    {
+        $expected = [
+            'hello' => 'world!',
+        ];
+
+        $response = new ResponseObject([
+            'hello' => 'world!',
+        ]);
+
+        self::assertSame($expected, $response->toArray());
+    }
+
+    /** @testdox can be outputted as a JSON object */
+    public function testCanBeOutputtedAsAJsonObject()
+    {
+        $expected = json_encode([
+            'hello' => 'world!',
+        ]);
+
+        $response = new ResponseObject([
+            'hello' => 'world!',
+        ]);
+
+        self::assertSame($expected, json_encode($response));
+    }
 }

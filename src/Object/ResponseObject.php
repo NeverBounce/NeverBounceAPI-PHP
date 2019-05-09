@@ -2,7 +2,9 @@
 
 namespace NeverBounce\Object;
 
-class ResponseObject
+use JsonSerializable;
+
+class ResponseObject implements JsonSerializable
 {
 
     /**
@@ -48,5 +50,21 @@ class ResponseObject
     public function __isset($name)
     {
         return isset($this->response[$name]);
+    }
+
+    public function toArray()
+    {
+        $out = [];
+
+        foreach ($this->response as $property => $value) {
+            $out[$property] = is_object($value) ? (array) $value : $value;
+        }
+
+        return $out;
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->toArray();
     }
 }
