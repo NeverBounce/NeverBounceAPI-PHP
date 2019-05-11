@@ -10,7 +10,7 @@ interface HttpClientInterface
     public function init($url);
 
     /**
-     * @param string $name Curl option name
+     * @param int $name Curl option name
      * @param mixed $value Curl option value
      */
     public function setOpt($name, $value);
@@ -21,7 +21,7 @@ interface HttpClientInterface
     public function execute();
 
     /**
-     * @param string $name
+     * @param int $name
      * @return mixed
      */
     public function getInfo($name);

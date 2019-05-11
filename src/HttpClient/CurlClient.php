@@ -15,7 +15,7 @@ class CurlClient implements HttpClientInterface
     }
 
     /**
-     * @param string $name
+     * @param int   $name
      * @param mixed $value
      */
     public function setOpt($name, $value)
@@ -32,7 +32,7 @@ class CurlClient implements HttpClientInterface
     }
 
     /**
-     * @param string $name
+     * @param int $name
      * @return mixed
      */
     public function getInfo($name)
