@@ -21,7 +21,7 @@ class ApiClient
     static protected $debug = false;
 
     /**
-     * @var ClientInterface
+     * @var HttpClientInterface
      */
     protected $client;
 
