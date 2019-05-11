@@ -47,7 +47,7 @@ class ApiClient
     protected $acceptedType = 'application/json';
 
     /**
-     * @var array
+     * @var array|string
      */
     protected $decodedResponse = [];
 
