@@ -25,11 +25,11 @@ class VerificationObject extends ResponseObject
      * @var array
      */
     static protected $integerCodes = [
-        'valid' => self::VALID,
-        'invalid' => self::INVALID,
+        'valid'      => self::VALID,
+        'invalid'    => self::INVALID,
         'disposable' => self::DISPOSABLE,
-        'catchall' => self::CATCHALL,
-        'unknown' => self::UNKNOWN,
+        'catchall'   => self::CATCHALL,
+        'unknown'    => self::UNKNOWN,
     ];
 
     /**
@@ -51,7 +51,7 @@ class VerificationObject extends ResponseObject
     }
 
     /**
-     * @param $flag
+     * @param int $flag
      * @return bool Returns true if the specified flag exists
      */
     public function hasFlag($flag)

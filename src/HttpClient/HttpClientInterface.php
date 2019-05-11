@@ -5,7 +5,7 @@ namespace NeverBounce\HttpClient;
 interface HttpClientInterface
 {
     /**
-     * @param $url
+     * @param string $url
      */
     public function init($url);
 
@@ -21,7 +21,7 @@ interface HttpClientInterface
     public function execute();
 
     /**
-     * @param $name
+     * @param string $name
      * @return mixed
      */
     public function getInfo($name);

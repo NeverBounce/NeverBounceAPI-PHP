@@ -28,7 +28,7 @@ class Jobs extends ApiClient
     }
 
     /**
-     * @param $id
+     * @param string $jobId
      * @return ResponseObject
      * @throws \NeverBounce\Errors\ThrottleException
      * @throws \NeverBounce\Errors\HttpClientException
@@ -44,10 +44,11 @@ class Jobs extends ApiClient
     }
 
     /**
-     * @param $url
-     * @param bool $runsample
-     * @param bool $autoparse
-     * @param bool $autostart
+     * @param string $input
+     * @param string $inputlocation
+     * @param bool   $runsample
+     * @param bool   $autoparse
+     * @param bool   $autostart
      * @return ResponseObject
      * @throws \NeverBounce\Errors\ThrottleException
      * @throws \NeverBounce\Errors\HttpClientException
@@ -77,7 +78,7 @@ class Jobs extends ApiClient
     }
 
     /**
-     * @param $jobId
+     * @param string $jobId
      * @param bool $autostart
      * @return ResponseObject
      * @throws \NeverBounce\Errors\ThrottleException
@@ -97,8 +98,8 @@ class Jobs extends ApiClient
     }
 
     /**
-     * @param $jobId
-     * @param bool $runsample
+     * @param string $jobId
+     * @param bool   $runsample
      * @return ResponseObject
      * @throws \NeverBounce\Errors\ThrottleException
      * @throws \NeverBounce\Errors\HttpClientException
@@ -117,8 +118,8 @@ class Jobs extends ApiClient
     }
 
     /**
-     * @param $jobId
-     * @param array $query
+     * @param string $jobId
+     * @param array  $query
      * @return string
      * @throws \NeverBounce\Errors\ThrottleException
      * @throws \NeverBounce\Errors\HttpClientException
@@ -137,8 +138,8 @@ class Jobs extends ApiClient
     }
 
     /**
-     * @param $jobId
-     * @param array $query
+     * @param string $jobId
+     * @param array  $query
      * @return ResponseObject
      * @throws \NeverBounce\Errors\ThrottleException
      * @throws \NeverBounce\Errors\HttpClientException

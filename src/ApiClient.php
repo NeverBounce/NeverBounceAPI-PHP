@@ -62,7 +62,7 @@ class ApiClient
     protected $responseHeaders = [];
 
     /**
-     * @var
+     * @var int
      */
     protected $statusCode = 0;
 
@@ -113,7 +113,7 @@ class ApiClient
     }
 
     /**
-     * @param enables debug mode (dumps out encoded params and response)
+     * enables debug mode (dumps out encoded params and response)
      */
     public static function debug()
     {
@@ -183,7 +183,7 @@ class ApiClient
     }
 
     /**
-     * @param $type
+     * @param string $type
      * @return $this
      */
     public function setAcceptedType($type)
@@ -299,9 +299,9 @@ class ApiClient
 
     /**
      * Parses the response string and handles any errors
-     * @param $respBody
-     * @param $respHeaders
-     * @param $respCode
+     * @param string $respBody
+     * @param array  $respHeaders
+     * @param int    $respCode
      * @return mixed
      * @throws GeneralException
      */
@@ -340,9 +340,8 @@ class ApiClient
     }
 
     /**
-     * @param $respBody
-     * @param $respHeaders
-     * @param $respCode
+     * @param string $respBody
+     * @param int $respCode
      * @return mixed
      * @throws GeneralException
      */
@@ -380,7 +379,7 @@ class ApiClient
     }
 
     /**
-     * @param $decoded
+     * @param array $decoded
      */
     protected function parseErrors($decoded)
     {

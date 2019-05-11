@@ -7,7 +7,7 @@ class CurlClient implements HttpClientInterface
     private $handle;
 
     /**
-     * @param $url
+     * @param string $url
      */
     public function init($url)
     {
@@ -32,7 +32,7 @@ class CurlClient implements HttpClientInterface
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return mixed
      */
     public function getInfo($name)
@@ -56,9 +56,6 @@ class CurlClient implements HttpClientInterface
         return curl_error($this->handle);
     }
 
-    /**
-     *
-     */
     public function close()
     {
         curl_close($this->handle);
