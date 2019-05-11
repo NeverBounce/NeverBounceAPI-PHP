@@ -140,7 +140,7 @@ class ApiClient
     }
 
     /**
-     * @return array
+     * @return array|string
      */
     public function getDecodedResponse()
     {
