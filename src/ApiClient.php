@@ -230,7 +230,14 @@ class ApiClient
 
         // Set options
         $this->client->setOpt(CURLOPT_HTTPHEADER, [
-            sprintf('User-Agent: NeverBounce-PHPSdk/%s PHP/%s.%s.%s %s)', Utils::wrapperVersion(), PHP_MAJOR_VERSION, PHP_MINOR_VERSION, PHP_RELEASE_VERSION, PHP_OS),
+            sprintf(
+                'User-Agent: NeverBounce-PHPSdk/%s PHP/%s.%s.%s %s)',
+                Utils::wrapperVersion(),
+                PHP_MAJOR_VERSION,
+                PHP_MINOR_VERSION,
+                PHP_RELEASE_VERSION,
+                PHP_OS
+            ),
             'Content-Type: ' . $this->contentType
         ]);
         $this->client->setOpt(CURLOPT_TIMEOUT, $this->timeout);
