@@ -165,7 +165,7 @@ class ApiClientTest extends TestCase
         $json = "{}";
         $client = new ApiClient($this->getMockHttpClient());
         $client->setAcceptedType('text/csv');
-        $this->setExpectedException(GeneralException::class);
+        $this->expectException(GeneralException::class);
         $method->invoke($client, $json, $this->generateHeaders(), 200);
     }
 
