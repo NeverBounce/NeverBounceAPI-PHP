@@ -12,7 +12,7 @@
 This is the official NeverBounce API PHP wrapper. It provides helpful methods to quickly implement our API in your existing php applications.
 
 ### Requirements
-* PHP 5.5 or greater
+* PHP 7.1 or greater
 * PHP JSON extension
 * PHP cURL extension
 
