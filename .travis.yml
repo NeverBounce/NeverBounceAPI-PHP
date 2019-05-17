@@ -8,10 +8,9 @@ install:
 
 jobs:
   include:
-    - script: $TRAVIS_BUILD_DIR/vendor/bin/phpunit
     - stage: Code Quality
       php: 7.3
       script: $TRAVIS_BUILD_DIR/vendor/bin/phpstan -l 1 src
-      
+
 notifications:
   email: false
