@@ -11,6 +11,8 @@ jobs:
     - stage: Code Quality
       php: 7.3
       script: $TRAVIS_BUILD_DIR/vendor/bin/phpstan analyse -l 1 src
-
+    - stage: Code Quality
+      php: 7.3
+      script: $TRAVIS_BUILD_DIR/vendor/bin/phpcs --standard=psr2 src
 notifications:
   email: false
