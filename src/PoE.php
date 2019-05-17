@@ -5,10 +5,10 @@ use NeverBounce\Object\ResponseObject;
 class PoE extends ApiClient
 {
     /**
-     * @param $email
-     * @param $result
-     * @param $confirmationToken
-     * @param $transactionId
+     * @param string $email
+     * @param mixed  $result
+     * @param string $confirmationToken
+     * @param string $transactionId
      * @return ResponseObject
      * @throws \NeverBounce\Errors\ThrottleException
      * @throws \NeverBounce\Errors\HttpClientException
@@ -20,10 +20,10 @@ class PoE extends ApiClient
     {
         self::$lastInstance = $obj = new self();
         $res = $obj->request('POST', 'poe/confirm', [
-            'email' => $email,
-            'result' => $result,
+            'email'              => $email,
+            'result'             => $result,
             'confirmation_token' => $confirmationToken,
-            'transaction_id' => $transactionId,
+            'transaction_id'     => $transactionId,
         ]);
         return new ResponseObject($res);
     }

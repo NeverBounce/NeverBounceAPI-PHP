@@ -8,7 +8,7 @@ class Auth
     protected static $apiKey;
 
     /**
-     * @return string
+     * @return string|null
      */
     public static function getApiKey()
     {

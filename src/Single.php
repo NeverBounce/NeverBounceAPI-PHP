@@ -5,10 +5,10 @@ use NeverBounce\Object\VerificationObject;
 class Single extends ApiClient
 {
     /**
-     * @param $email
+     * @param string    $email
      * @param bool|null $addressinfo
      * @param bool|null $creditsinfo
-     * @param int|null $maxexecution
+     * @param int|null  $maxexecution
      * @return VerificationObject
      * @throws \NeverBounce\Errors\ThrottleException
      * @throws \NeverBounce\Errors\HttpClientException
@@ -20,9 +20,9 @@ class Single extends ApiClient
     {
         self::$lastInstance = $obj = new self();
         $res = $obj->request('GET', 'single/check', [
-            'email' => $email,
-            'address_info' => $addressinfo,
-            'credits_info' => $creditsinfo,
+            'email'              => $email,
+            'address_info'       => $addressinfo,
+            'credits_info'       => $creditsinfo,
             'max_execution_time' => $maxexecution,
         ]);
         return new VerificationObject($email, $res);

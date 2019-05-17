@@ -20,7 +20,7 @@ class ResponseObject
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return mixed|null
      */
     public function __get($name)
@@ -33,8 +33,8 @@ class ResponseObject
     }
 
     /**
-     * @param $name
-     * @param $value
+     * @param string $name
+     * @param mixed $value
      */
     public function __set($name, $value)
     {
@@ -42,7 +42,7 @@ class ResponseObject
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return bool
      */
     public function __isset($name)

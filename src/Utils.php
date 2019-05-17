@@ -4,7 +4,7 @@ class Utils
 {
     /**
      * Returns wrapper version
-     * @return string
+     * @return string|false
      */
     public static function wrapperVersion()
     {
