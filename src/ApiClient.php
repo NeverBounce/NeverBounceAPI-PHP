@@ -13,12 +13,12 @@ class ApiClient
     /**
      * @var self
      */
-    static protected $lastInstance;
+    protected static $lastInstance;
 
     /**
      * @var bool
      */
-    static protected $debug = false;
+    protected static $debug = false;
 
     /**
      * @var HttpClientInterface
@@ -28,7 +28,7 @@ class ApiClient
     /**
      * @var string The base url for API requests
      */
-    static protected $baseUrl = 'https://api.neverbounce.com/v4/';
+    protected static $baseUrl = 'https://api.neverbounce.com/v4/';
 
     /**
      * @var int The maximum number of seconds to allow cURL functions to
@@ -393,7 +393,7 @@ class ApiClient
         $exception = isset($this->exceptionLUT[$decoded['status']])
             ? $this->exceptionLUT[$decoded['status']] : GeneralException::class;
 
-        if($exception === AuthException::class) {
+        if ($exception === AuthException::class) {
             throw new $exception(
                 'We were unable to authenticate your request. '
                 . 'The following information was supplied: '

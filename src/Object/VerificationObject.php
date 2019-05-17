@@ -24,7 +24,7 @@ class VerificationObject extends ResponseObject
     /**
      * @var array
      */
-    static protected $integerCodes = [
+    protected static $integerCodes = [
         'valid'      => self::VALID,
         'invalid'    => self::INVALID,
         'disposable' => self::DISPOSABLE,
