@@ -16,6 +16,8 @@ This is the official NeverBounce API PHP wrapper. It provides helpful methods to
 * PHP JSON extension
 * PHP cURL extension
 
+> For PHP 5.5 - 7.0 use the [4.1](https://github.com/NeverBounce/NeverBounceAPI-PHP/tree/4.1) branch
+
 Installation
 ============
 Composer Installation
@@ -24,14 +26,14 @@ This package takes advantage of composer's autoloading features, following the P
 
 To install using composer you can run
 ``` bash
-composer require "neverbounce/neverbounce-php":"~4.1.0"
+composer require "neverbounce/neverbounce-php":"~4.2.0"
 ```
 
 Or add this to your composer.json
 ``` php
 {
   "require": {
-    "neverbounce/neverbounce-php":"~4.1.0"
+    "neverbounce/neverbounce-php":"~4.2.0"
   }
 }
 ```
