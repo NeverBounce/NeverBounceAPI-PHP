@@ -4,10 +4,11 @@ class Utils
 {
     /**
      * Returns wrapper version
+     * @deprecated 4.1.7 Use ApiClient::VERSION instead
      * @return string
      */
     public static function wrapperVersion()
     {
-        return file_get_contents(__DIR__ . '/../VERSION');
+        return ApiClient::VERSION;
     }
 }
