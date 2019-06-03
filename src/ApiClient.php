@@ -231,12 +231,11 @@ class ApiClient
         // Set options
         $this->client->setOpt(CURLOPT_HTTPHEADER, [
             sprintf(
-                'User-Agent: NeverBounce-PHPSdk/%s PHP/%s.%s.%s %s)',
+                'User-Agent: NeverBounce-PHPSdk/%s PHP/%s.%s.%s)',
                 Utils::wrapperVersion(),
                 PHP_MAJOR_VERSION,
                 PHP_MINOR_VERSION,
-                PHP_RELEASE_VERSION,
-                PHP_OS
+                PHP_RELEASE_VERSION
             ),
             'Content-Type: ' . $this->contentType
         ]);
