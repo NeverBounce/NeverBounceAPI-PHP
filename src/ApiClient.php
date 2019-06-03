@@ -10,6 +10,12 @@ use NeverBounce\HttpClient\HttpClientInterface;
 
 class ApiClient
 {
+
+    /**
+     * @since 4.2.1
+     */
+    const VERSION = '4.2.1';
+
     /**
      * @var self
      */
@@ -231,12 +237,11 @@ class ApiClient
         // Set options
         $this->client->setOpt(CURLOPT_HTTPHEADER, [
             sprintf(
-                'User-Agent: NeverBounce-PHPSdk/%s PHP/%s.%s.%s %s)',
-                Utils::wrapperVersion(),
+                'User-Agent: NeverBounce-PHPSdk/%s PHP/%s.%s.%s)',
+                self::VERSION,
                 PHP_MAJOR_VERSION,
                 PHP_MINOR_VERSION,
-                PHP_RELEASE_VERSION,
-                PHP_OS
+                PHP_RELEASE_VERSION
             ),
             'Content-Type: ' . $this->contentType
         ]);
