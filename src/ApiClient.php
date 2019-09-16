@@ -14,7 +14,7 @@ class ApiClient
     /**
      * @since 4.2.1
      */
-    const VERSION = '4.2.1';
+    const VERSION = '4.2.2';
 
     /**
      * @var self
