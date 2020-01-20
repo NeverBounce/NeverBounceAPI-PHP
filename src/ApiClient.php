@@ -34,7 +34,12 @@ class ApiClient
     /**
      * @var string The base url for API requests
      */
-    protected static $baseUrl = 'https://api.neverbounce.com/v4/';
+    protected static $baseUrl = 'https://api.neverbounce.com';
+
+    /**
+     * @var string
+     */
+    protected static $apiVersion = 'v4';
 
     /**
      * @var int The maximum number of seconds to allow cURL functions to
@@ -108,6 +113,14 @@ class ApiClient
     public static function setBaseUrl($url)
     {
         self::$baseUrl = $url;
+    }
+
+    /**
+     * @param string $version
+     */
+    public static function setApiVersion(string $version): void
+    {
+        self::$apiVersion = $version;
     }
 
     /**
@@ -222,7 +235,7 @@ class ApiClient
         }
 
         // Base url + endpoint resolved
-        $url = self::$baseUrl . $endpoint;
+        $url = self::$baseUrl . '/' . self::$apiVersion . '/' . $endpoint;
 
         // If this is a GET request append query to the end of the url
         if (strtoupper($method) === 'GET') {
