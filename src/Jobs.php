@@ -49,7 +49,7 @@ class Jobs extends ApiClient
      * @param bool   $runsample
      * @param bool   $autoparse
      * @param bool   $autostart
-     * @param bool|null $addHistoricalData
+     * @param bool|null $historicalData
      * @return ResponseObject
      * @throws \NeverBounce\Errors\ThrottleException
      * @throws \NeverBounce\Errors\HttpClientException
@@ -64,7 +64,7 @@ class Jobs extends ApiClient
         $runsample = null,
         $autoparse = null,
         $autostart = null,
-        $addHistoricalData = null
+        $historicalData = null
     ) {
         self::$lastInstance = $obj = new self();
         $obj->setContentType('application/json');
@@ -77,8 +77,8 @@ class Jobs extends ApiClient
             'auto_parse' => $autoparse,
         ];
 
-        if ($addHistoricalData !== null) {
-            $params['request_meta_data'] = ['leverage_historical_data' => $addHistoricalData ? 1 : 0];
+        if ($historicalData !== null) {
+            $params['request_meta_data'] = ['leverage_historical_data' => $historicalData ? 1 : 0];
         }
 
         $res = $obj->request('POST', 'jobs/create', $params);

@@ -9,7 +9,7 @@ class Single extends ApiClient
      * @param bool|null $addressinfo
      * @param bool|null $creditsinfo
      * @param int|null  $timeout
-     * @param bool|null $addHistoricalData
+     * @param bool|null $historicalData
      * @return VerificationObject
      * @throws \NeverBounce\Errors\ThrottleException
      * @throws \NeverBounce\Errors\HttpClientException
@@ -22,7 +22,7 @@ class Single extends ApiClient
         $addressinfo = null,
         $creditsinfo = null,
         $timeout = null,
-        $addHistoricalData = null
+        $historicalData = null
     ) {
         self::$lastInstance = $obj = new self();
         $params = [
@@ -32,8 +32,8 @@ class Single extends ApiClient
             'timeout' => $timeout,
         ];
 
-        if ($addHistoricalData !== null) {
-            $params['request_meta_data'] = ['leverage_historical_data' => $addHistoricalData ? 1 : 0];
+        if ($historicalData !== null) {
+            $params['request_meta_data'] = ['leverage_historical_data' => $historicalData ? 1 : 0];
         }
 
         $res = $obj->request('GET', 'single/check', $params);
