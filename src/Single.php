@@ -9,6 +9,7 @@ class Single extends ApiClient
      * @param bool|null $addressinfo
      * @param bool|null $creditsinfo
      * @param int|null  $timeout
+     * @param bool|null $historicalData
      * @return VerificationObject
      * @throws \NeverBounce\Errors\ThrottleException
      * @throws \NeverBounce\Errors\HttpClientException
@@ -16,15 +17,26 @@ class Single extends ApiClient
      * @throws \NeverBounce\Errors\BadReferrerException
      * @throws \NeverBounce\Errors\AuthException
      */
-    public static function check($email, $addressinfo = null, $creditsinfo = null, $timeout = null)
-    {
+    public static function check(
+        $email,
+        $addressinfo = null,
+        $creditsinfo = null,
+        $timeout = null,
+        $historicalData = null
+    ) {
         self::$lastInstance = $obj = new self();
-        $res = $obj->request('GET', 'single/check', [
-            'email'              => $email,
-            'address_info'       => $addressinfo,
-            'credits_info'       => $creditsinfo,
-            'timeout'            => $timeout,
-        ]);
+        $params = [
+            'email' => $email,
+            'address_info' => $addressinfo,
+            'credits_info' => $creditsinfo,
+            'timeout' => $timeout,
+        ];
+
+        if ($historicalData !== null) {
+            $params['request_meta_data'] = ['leverage_historical_data' => $historicalData ? 1 : 0];
+        }
+
+        $res = $obj->request('GET', 'single/check', $params);
         return new VerificationObject($email, $res);
     }
 }
