@@ -237,17 +237,14 @@ class ApiClient
      */
     public function request($method, $endpoint, array $params = [])
     {
-        // Set API key parameter
         $params['key'] = Auth::getApiKey();
 
-        // Encode parameters according to contentType
         $encodedParams = ($this->contentType === 'application/json') ? json_encode($params) : http_build_query($params);
 
         if (self::$debug) {
             var_dump($encodedParams);
         }
 
-        // Base url + endpoint resolved
         $url = self::$baseUrl . '/' . self::$apiVersion . '/' . $endpoint;
         $isGetMethod = strtoupper($method) === 'GET';
         $this->client->init($isGetMethod ? $url . '?' . $encodedParams : $url);
@@ -260,7 +257,6 @@ class ApiClient
             $this->client->setOpt(CURLOPT_CUSTOMREQUEST, 'POST');
         }
 
-        // Set options
         $this->client->setOpt(CURLOPT_HTTPHEADER, [
             sprintf(
                 'User-Agent: NeverBounce-PHPSdk/%s PHP/%s.%s.%s)',
@@ -297,7 +293,6 @@ class ApiClient
             $this->handleCurlError($url, $errno, $message);
         }
 
-        // Get status code
         $this->statusCode = $this->client->getInfo(CURLINFO_HTTP_CODE);
         $this->client->close();
         return $this->response($this->rawResponse, $this->responseHeaders, $this->statusCode);
