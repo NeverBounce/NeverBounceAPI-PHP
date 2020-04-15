@@ -219,7 +219,7 @@ class ApiClient
     /**
      * @param array $options
      */
-    public function setCurlOptions($options)
+    public function setCurlOptions($options): void
     {
         $this->curlOptions = $options;
     }
@@ -249,14 +249,10 @@ class ApiClient
 
         // Base url + endpoint resolved
         $url = self::$baseUrl . '/' . self::$apiVersion . '/' . $endpoint;
-
         $isGetMethod = strtoupper($method) === 'GET';
-
         $this->client->init($isGetMethod ? $url . '?' . $encodedParams : $url);
 
-        foreach ($this->curlOptions as $key => $value) {
-            $this->client->setOpt($key, $value);
-        }
+        $this->applyCurlOptions();
 
         if (!$isGetMethod) {
             // Assume all other requests are POST and set fields accordingly
@@ -442,6 +438,13 @@ class ApiClient
                 . "{$decoded['message']}"
                 . "\n\n({$decoded['status']})"
             );
+        }
+    }
+
+    private function applyCurlOptions(): void
+    {
+        foreach ($this->curlOptions as $key => $value) {
+            $this->client->setOpt($key, $value);
         }
     }
 }
