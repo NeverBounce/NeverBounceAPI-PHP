@@ -42,6 +42,11 @@ class ApiClient
     protected static $apiVersion = 'v4';
 
     /**
+     * @var array
+     */
+    protected static $curlOptions = [];
+
+    /**
      * @var int The maximum number of seconds to allow cURL functions to
      *     execute.
      */
@@ -86,11 +91,6 @@ class ApiClient
         'general_failure' => GeneralException::class,
         'throttle_triggered' => ThrottleException::class,
     ];
-
-    /**
-     * @var array
-     */
-    protected $curlOptions = [];
 
     /**
      * ApiClient constructor.
@@ -142,6 +142,14 @@ class ApiClient
     public static function debug()
     {
         self::$debug = true;
+    }
+
+    /**
+     * @param array $options
+     */
+    public static function setCurlOptions($options): void
+    {
+        self::$curlOptions = $options;
     }
 
     /**
@@ -214,14 +222,6 @@ class ApiClient
     {
         $this->acceptedType = $type;
         return $this;
-    }
-
-    /**
-     * @param array $options
-     */
-    public function setCurlOptions($options): void
-    {
-        $this->curlOptions = $options;
     }
 
     /**
@@ -436,7 +436,7 @@ class ApiClient
 
     private function applyCurlOptions(): void
     {
-        foreach ($this->curlOptions as $key => $value) {
+        foreach (self::$curlOptions as $key => $value) {
             $this->client->setOpt($key, $value);
         }
     }
