@@ -88,6 +88,11 @@ class ApiClient
     ];
 
     /**
+     * @var array
+     */
+    protected $curlOptions = [];
+
+    /**
      * ApiClient constructor.
      * @param HttpClientInterface $clientInterface
      * @throws AuthException
@@ -212,6 +217,14 @@ class ApiClient
     }
 
     /**
+     * @param array $options
+     */
+    public function setCurlOptions($options)
+    {
+        $this->curlOptions = $options;
+    }
+
+    /**
      * @param string $method
      * @param string $endpoint
      * @param array $params
@@ -237,12 +250,21 @@ class ApiClient
         // Base url + endpoint resolved
         $url = self::$baseUrl . '/' . self::$apiVersion . '/' . $endpoint;
 
-        // If this is a GET request append query to the end of the url
-        if (strtoupper($method) === 'GET') {
-            $this->client->init($url . '?' . $encodedParams);
-        } else {
+        $curlUrl = $url;
+        $isGetMethod = strtoupper($method) === 'GET';
+
+        if ($isGetMethod) {
+            $curlUrl = $url . '?' . $encodedParams;
+        }
+
+        $this->client->init($curlUrl);
+
+        foreach ($this->curlOptions as $key => $value) {
+            $this->client->setOpt($key, $value);
+        }
+
+        if (!$isGetMethod) {
             // Assume all other requests are POST and set fields accordingly
-            $this->client->init($url);
             $this->client->setOpt(CURLOPT_POSTFIELDS, $encodedParams);
             $this->client->setOpt(CURLOPT_CUSTOMREQUEST, 'POST');
         }
