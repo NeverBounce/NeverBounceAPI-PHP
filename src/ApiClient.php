@@ -421,24 +421,17 @@ class ApiClient
      */
     protected function parseErrors($decoded)
     {
-        $exception = isset($this->exceptionLUT[$decoded['status']])
-            ? $this->exceptionLUT[$decoded['status']] : GeneralException::class;
+        $exception = $this->exceptionLUT[$decoded['status']] ?? GeneralException::class;
+
+        $message = 'We were unable to complete your request. The following information was supplied: '
+            . "{$decoded['message']}\n\n({$decoded['status']})";
 
         if ($exception === AuthException::class) {
-            throw new $exception(
-                'We were unable to authenticate your request. '
-                . 'The following information was supplied: '
-                . "{$decoded['message']}"
-                . "\n\n(auth_failure)"
-            );
-        } else {
-            throw new $exception(
-                'We were unable to complete your request. '
-                . 'The following information was supplied: '
-                . "{$decoded['message']}"
-                . "\n\n({$decoded['status']})"
-            );
+            $message = 'We were unable to authenticate your request. The following information was supplied: '
+                . "{$decoded['message']}\n\n(auth_failure)";
         }
+
+        throw new $exception($message);
     }
 
     private function applyCurlOptions(): void
