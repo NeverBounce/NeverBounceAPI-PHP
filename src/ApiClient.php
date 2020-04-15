@@ -250,14 +250,9 @@ class ApiClient
         // Base url + endpoint resolved
         $url = self::$baseUrl . '/' . self::$apiVersion . '/' . $endpoint;
 
-        $curlUrl = $url;
         $isGetMethod = strtoupper($method) === 'GET';
 
-        if ($isGetMethod) {
-            $curlUrl = $url . '?' . $encodedParams;
-        }
-
-        $this->client->init($curlUrl);
+        $this->client->init($isGetMethod ? $url . '?' . $encodedParams : $url);
 
         foreach ($this->curlOptions as $key => $value) {
             $this->client->setOpt($key, $value);
