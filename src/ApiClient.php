@@ -147,7 +147,7 @@ class ApiClient
     /**
      * @param array $options
      */
-    public static function setCurlOptions($options): void
+    public static function setCurlOptions(array $options): void
     {
         self::$curlOptions = $options;
     }
