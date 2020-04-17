@@ -42,6 +42,11 @@ class ApiClient
     protected static $apiVersion = 'v4';
 
     /**
+     * @var array
+     */
+    protected static $curlOptions = [];
+
+    /**
      * @var int The maximum number of seconds to allow cURL functions to
      *     execute.
      */
@@ -137,6 +142,14 @@ class ApiClient
     public static function debug()
     {
         self::$debug = true;
+    }
+
+    /**
+     * @param array $options
+     */
+    public static function setCurlOptions(array $options): void
+    {
+        self::$curlOptions = $options;
     }
 
     /**
@@ -236,13 +249,13 @@ class ApiClient
 
         // Base url + endpoint resolved
         $url = self::$baseUrl . '/' . self::$apiVersion . '/' . $endpoint;
+        $isGetMethod = strtoupper($method) === 'GET';
+        $this->client->init($isGetMethod ? $url . '?' . $encodedParams : $url);
 
-        // If this is a GET request append query to the end of the url
-        if (strtoupper($method) === 'GET') {
-            $this->client->init($url . '?' . $encodedParams);
-        } else {
+        $this->applyCurlOptions();
+
+        if (!$isGetMethod) {
             // Assume all other requests are POST and set fields accordingly
-            $this->client->init($url);
             $this->client->setOpt(CURLOPT_POSTFIELDS, $encodedParams);
             $this->client->setOpt(CURLOPT_CUSTOMREQUEST, 'POST');
         }
@@ -408,23 +421,23 @@ class ApiClient
      */
     protected function parseErrors($decoded)
     {
-        $exception = isset($this->exceptionLUT[$decoded['status']])
-            ? $this->exceptionLUT[$decoded['status']] : GeneralException::class;
+        $exception = $this->exceptionLUT[$decoded['status']] ?? GeneralException::class;
+
+        $message = 'We were unable to complete your request. The following information was supplied: '
+            . "{$decoded['message']}\n\n({$decoded['status']})";
 
         if ($exception === AuthException::class) {
-            throw new $exception(
-                'We were unable to authenticate your request. '
-                . 'The following information was supplied: '
-                . "{$decoded['message']}"
-                . "\n\n(auth_failure)"
-            );
-        } else {
-            throw new $exception(
-                'We were unable to complete your request. '
-                . 'The following information was supplied: '
-                . "{$decoded['message']}"
-                . "\n\n({$decoded['status']})"
-            );
+            $message = 'We were unable to authenticate your request. The following information was supplied: '
+                . "{$decoded['message']}\n\n(auth_failure)";
+        }
+
+        throw new $exception($message);
+    }
+
+    private function applyCurlOptions(): void
+    {
+        foreach (self::$curlOptions as $key => $value) {
+            $this->client->setOpt($key, $value);
         }
     }
 }
