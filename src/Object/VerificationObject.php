@@ -20,16 +20,18 @@ class VerificationObject extends ResponseObject
     const DISPOSABLE = 2;
     const CATCHALL = 3;
     const UNKNOWN = 4;
+    const INCONCLUSIVE = 4;
 
     /**
      * @var array
      */
     protected static $integerCodes = [
-        'valid'      => self::VALID,
-        'invalid'    => self::INVALID,
-        'disposable' => self::DISPOSABLE,
-        'catchall'   => self::CATCHALL,
-        'unknown'    => self::UNKNOWN,
+        'valid'        => self::VALID,
+        'invalid'      => self::INVALID,
+        'disposable'   => self::DISPOSABLE,
+        'catchall'     => self::CATCHALL,
+        'unknown'      => self::UNKNOWN,
+        'inconclusive' => self::INCONCLUSIVE
     ];
 
     /**
@@ -40,7 +42,11 @@ class VerificationObject extends ResponseObject
     public function __construct($email, $response)
     {
         $response['email'] = $email;
-        $response['result_integer'] = self::$integerCodes[$response['result']];
+        if (isset(self::$integerCodes[$response['result']])) {
+            $response['result_integer'] = self::$integerCodes[$response['result']];
+        } else {
+            $response['result_integer'] = self::UNKNOWN;
+        }
         $response['credits_info'] = new ResponseObject(
             isset($response['credits_info']) ? $response['credits_info'] : []
         );
