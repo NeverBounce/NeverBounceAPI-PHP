@@ -39,7 +39,7 @@ class ApiClient
     /**
      * @var string
      */
-    protected static $apiVersion = 'v4';
+    protected static $apiVersion = 'v4.2';
 
     /**
      * @var array

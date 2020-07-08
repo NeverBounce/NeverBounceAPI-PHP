@@ -50,6 +50,9 @@ class Jobs extends ApiClient
      * @param bool   $autoparse
      * @param bool   $autostart
      * @param bool|null $historicalData
+     * @param bool   $allowManualReview
+     * @param string $callbackUrl
+     * @param array  $callbackHeaders
      * @return ResponseObject
      * @throws \NeverBounce\Errors\ThrottleException
      * @throws \NeverBounce\Errors\HttpClientException
@@ -64,7 +67,10 @@ class Jobs extends ApiClient
         $runsample = null,
         $autoparse = null,
         $autostart = null,
-        $historicalData = null
+        $historicalData = null,
+        $allowManualReview = null,
+        $callbackUrl = null,
+        $callbackHeaders = null
     ) {
         self::$lastInstance = $obj = new self();
         $obj->setContentType('application/json');
@@ -75,7 +81,16 @@ class Jobs extends ApiClient
             'run_sample' => $runsample,
             'auto_start' => $autostart,
             'auto_parse' => $autoparse,
+            'allow_manual_review' => $allowManualReview,
         ];
+
+        if ($callbackUrl) {
+            $params['callback_url'] = $callbackUrl;
+        }
+
+        if ($callbackHeaders && is_array($callbackHeaders)) {
+            $params['callback_headers'] = $callbackHeaders;
+        }
 
         if ($historicalData !== null) {
             $params['request_meta_data'] = ['leverage_historical_data' => $historicalData ? 1 : 0];
@@ -108,6 +123,7 @@ class Jobs extends ApiClient
     /**
      * @param string $jobId
      * @param bool   $runsample
+     * @param bool $allowManualReview
      * @return ResponseObject
      * @throws \NeverBounce\Errors\ThrottleException
      * @throws \NeverBounce\Errors\HttpClientException
@@ -115,12 +131,13 @@ class Jobs extends ApiClient
      * @throws \NeverBounce\Errors\BadReferrerException
      * @throws \NeverBounce\Errors\AuthException
      */
-    public static function start($jobId, $runsample = null)
+    public static function start($jobId, $runsample = null, $allowManualReview = null)
     {
         self::$lastInstance = $obj = new self();
         $res = $obj->request('POST', 'jobs/start', [
             'job_id' => $jobId,
             'run_sample' => $runsample,
+            'allow_manual_review' => $allowManualReview
         ]);
         return new ResponseObject($res);
     }
