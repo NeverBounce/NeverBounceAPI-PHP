@@ -26,14 +26,14 @@ This package takes advantage of composer's autoloading features, following the P
 
 To install using composer you can run
 ``` bash
-composer require "neverbounce/neverbounce-php":"~4.4.0"
+composer require "neverbounce/neverbounce-php":"~4.5.0"
 ```
 
 Or add this to your composer.json
 ``` php
 {
   "require": {
-    "neverbounce/neverbounce-php":"~4.4.0"
+    "neverbounce/neverbounce-php":"~4.5.0"
   }
 }
 ```
