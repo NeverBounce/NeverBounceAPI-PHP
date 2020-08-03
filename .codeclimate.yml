@@ -11,6 +11,9 @@ engines:
     enabled: true
   phpmd:
     enabled: true
+    checks:
+      Design/LongParameterList:
+        enabled: false
 ratings:
   paths:
   - "**.php"
