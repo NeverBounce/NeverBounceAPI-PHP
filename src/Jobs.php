@@ -44,15 +44,16 @@ class Jobs extends ApiClient
     }
 
     /**
-     * @param string $input
-     * @param string $inputlocation
-     * @param bool   $runsample
-     * @param bool   $autoparse
-     * @param bool   $autostart
-     * @param bool|null $historicalData
-     * @param bool   $allowManualReview
-     * @param string $callbackUrl
-     * @param array  $callbackHeaders
+     * @param string|array $input
+     * @param string       $inputlocation
+     * @param bool|null    $runsample
+     * @param bool|null    $autoparse
+     * @param bool|null    $autostart
+     * @param bool|null    $historicalData
+     * @param bool|null    $allowManualReview
+     * @param string|null  $callbackUrl
+     * @param array|null   $callbackHeaders
+     *
      * @return ResponseObject
      * @throws \NeverBounce\Errors\ThrottleException
      * @throws \NeverBounce\Errors\HttpClientException
