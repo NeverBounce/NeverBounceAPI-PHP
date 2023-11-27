@@ -7,6 +7,7 @@
  * @property-read  string $result
  * @property-read  int $result_integer
  * @property-read  array $flags
+ * @property-read  string $suggested_correction
  * @property-read  ResponseObject $credits_info
  * @property-read  ResponseObject $address_info
  */
@@ -47,6 +48,7 @@ class VerificationObject extends ResponseObject
         $response['address_info'] = new ResponseObject(
             isset($response['address_info']) ? $response['address_info'] : []
         );
+        $this->suggested_correction = isset($response['suggested_correction']) ? $response['suggested_correction'] : '';
         parent::__construct($response);
     }
 
